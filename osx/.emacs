@@ -202,6 +202,8 @@
 (require 'helm-config)
 (helm-mode 1)
 (global-set-key (kbd "C-x b") 'helm-multi-files)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+
 (helm-autoresize-mode 1)
 (setq helm-M-x-fuzzy-match t)
 (setq helm-buffers-fuzzy-matching t
