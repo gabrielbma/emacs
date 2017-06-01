@@ -51,6 +51,15 @@
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 (setq reftex-plug-into-AUCTeX t)
 (setq TeX-PDF-mode t)
+(add-to-list 'exec-path "/Library/TeX/texbin")
+
+;; 
+(getenv "PATH")
+ (setenv "PATH"
+         (concat
+ "/Library/TeX/texbin/" ":"
+(getenv "PATH")))
+
 
 ;; use Skim as default pdf viewer
 ;; Skim's displayline is used for forward search (from .tex to .pdf)
@@ -263,3 +272,12 @@
 (setq-local company-backends 
     (append '((company-yasnippet company-R-args company-R-objects)) 
              company-backends))
+
+(require 'ensime)
+(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+
+;; autolad octave mode for *.m-files
+       (autoload 'octave-mode "octave-mod" nil t)
+       (setq auto-mode-alist (cons '("\\.m$" . octave-mode) auto-mode-alist))
+
+(require 'vlf-setup)
