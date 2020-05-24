@@ -55,9 +55,17 @@
              '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
+;; enable elpy
+(elpy-enable)
+(setq elpy-rpc-virtualenv-path 'current)
+
+;; real-auto-save
+(require 'real-auto-save)
+(add-hook 'prog-mode-hook 'real-auto-save-mode)
+(setq real-auto-save-interval 1)
+
 ;; magit mode
 (global-set-key (kbd "C-x g") 'magit-status)
-
 
 ;;AucTex and Preview-Latex
 ;;(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
@@ -123,8 +131,9 @@
 ;;(add-hook 'sgml-mode-hook 'ac-emmet-html-setup)
 ;;(add-hook 'css-mode-hook 'ac-emmet-css-setup)
 
-;; flycheck does not officially support Windows.
-;; (require 'flycheck)
+(require 'flycheck)
+(global-flycheck-mode)
+;; (exec-path-from-shell-initialize)
 ;; (add-hook 'after-init-hook #'global-flycheck-mode)
                                         ;enable running flycheck from Finder
 ;; (when (memq window-system '(mac ns))
@@ -170,8 +179,8 @@
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . markdown-mode))
 
-;; (smartparens-global-mode t)
-(smartparens-global-strict-mode t)
+;; smartparens
+(smartparens-global-mode t)
 
 ;; ;; ess
 ;; (add-to-list 'load-path "/Users/gabrielbma/Projects/ess/lisp/")
@@ -185,8 +194,8 @@
 ;; (setq exec-path (append exec-path '("/usr/local/bin" "/usr/texbin")))
 
 
-;; python-mode
-(setq python-shell-interpreter "/usr/local/opt/python3/bin/python3")
+;; python-mode is using elpy to be set, don't forget to enable pyvenv-activate
+
 
 ;; projectile
 (projectile-global-mode)
@@ -326,7 +335,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (move-text smart-shift engine-mode iy-go-to-char multiple-cursors expand-region web-beautify zenburn-theme vlf smartparens python-mode markdown-mode js2-mode helm-swoop helm-projectile helm-company helm-c-yasnippet ensime emmet-mode company-statistics company-quickhelp company-auctex))))
+    (flycheck real-auto-save move-text smart-shift engine-mode iy-go-to-char multiple-cursors expand-region web-beautify zenburn-theme vlf smartparens python-mode markdown-mode js2-mode helm-swoop helm-projectile helm-company helm-c-yasnippet ensime emmet-mode company-statistics company-quickhelp company-auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
