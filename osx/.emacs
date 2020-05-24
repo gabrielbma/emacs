@@ -11,17 +11,9 @@
 
 ;;(prefer-coding-system 'utf-8-unix)
 
-;; Auto refresh buffers
-(global-auto-revert-mode 1)
-
-;; Also auto refresh dired, but be quiet about it
-(setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil)
-
 ;; Recent files
 (recentf-mode 1)
-;; replace for helm-recentf
-;;(global-set-key (kbd "C-x C-r") 'recentf-open-files)
+(global-set-key (kbd "C-x C-r") 'recentf-open-files)
 
 (winner-mode 1)
 
@@ -37,6 +29,214 @@
 
 
 ;; set keys for Apple keyboard, for emacs in OS X;
+;; See: http://ergoemacs.org/emacs/emacs_hyper_super_keys.html
+(setq mac-command-modifier 'meta) ; make cmd key do Meta
+(setq mac-option-modifier 'super) ; make opt key do Super
+(setq mac-control-modifier 'control) ; make Control key do Control
+(setq ns-function-modifier 'hyper)  ; make Fn key do Hyper
+
+;; window management
+(global-set-key (kbd "M-P") 'windmove-up)
+(global-set-key (kbd "M-N") 'windmove-down)
+(global-set-key (kbd "M-F") 'windmove-right)
+(global-set-key (kbd "M-B") 'windmove-left)
+
+;; That keybind is useful with multi-cursor mode
+(global-set-key (kbd "H-SPC") 'set-rectangular-region-anchor)
+
+;; Collapse lines
+(global-set-key (kbd "M-j")
+            (lambda ()
+                  (interactive)
+                  (join-line -1)))
+
+;;;;;;  Add Ons
+(require 'package)
+(add-to-list 'package-archives
+             ; warning not using the MELPA stable. To use MELPA stable repo, replace melpa with melpa-stable
+             '("melpa" . "http://melpa.org/packages/") t)
+(package-initialize)
+
+;; magit mode
+(global-set-key (kbd "C-x g") 'magit-status)
+
+
+;;AucTex and Preview-Latex
+;;(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+;;(setq reftex-plug-into-AUCTeX t)
+;;(setq-default ispell-program-name "aspell")  
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master nil)
+
+(add-hook 'LaTeX-mode-hook 'visual-line-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(setq reftex-plug-into-AUCTeX t)
+(setq TeX-PDF-mode t)
+;; (add-to-list 'exec-path "/Library/TeX/texbin")
+
+(setenv "PATH" (concat (getenv "PATH") ":/Library/TeX/texbin"))
+(setq exec-path (append exec-path '("/Library/TeX/texbin")))
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin/"))
+(setq exec-path (append exec-path '("/usr/local/bin/")))
+
+;; 
+;; (getenv "PATH")
+;;  (setenv "PATH"
+;;          (concat
+;;           "/Library/TeX/texbin/" ":"
+;; (getenv "PATH")))
+
+
+;; use Skim as default pdf viewer
+;; Skim's displayline is used for forward search (from .tex to .pdf)
+;; option -b highlights the current line; option -g opens Skim in the background  
+(setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
+(setq TeX-view-program-list
+      '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
+
+
+;; To RefTex work properly with AUCTex
+(setq reftex-plug-into-AUCTeX t)
+
+;; disable to use Helm
+;; (require 'ido)
+;; (ido-mode t)
+
+(require 'zenburn-theme)
+(load-theme 'zenburn t)
+
+;; disable to switch to company-mode
+;; (require 'auto-complete-config)
+;;(ac-config-default)
+
+; Disable to use Helm
+;; (require 'smex)
+;; (smex-initialize)
+;; (global-set-key (kbd "M-x") 'smex)
+;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+
+;; This is your old M-x.
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+(require 'js2-mode)
+(add-to-list 'auto-mode-alist '("\\.js$". js2-mode))
+
+(require 'emmet-mode)
+(add-hook 'sgml-mode-hook 'emmet-mode)
+(add-hook 'css-mode-hook  'emmet-mode)
+(define-key emmet-mode-keymap (kbd "C-j") nil)
+(define-key emmet-mode-keymap (kbd "M-e") 'emmet-expand-line)
+
+;; disable to switch to company-mode
+;;(require 'ac-emmet)
+;;(add-hook 'sgml-mode-hook 'ac-emmet-html-setup)
+;;(add-hook 'css-mode-hook 'ac-emmet-css-setup)
+
+;; flycheck does not officially support Windows.
+;; (require 'flycheck)
+;; (add-hook 'after-init-hook #'global-flycheck-mode)
+                                        ;enable running flycheck from Finder
+;; (when (memq window-system '(mac ns))
+;;   (exec-path-from-shell-initialize))
+
+(add-hook 'js-mode-hook
+          (lambda () (flycheck-mode t)))
+
+(require 'yasnippet)
+
+(setq yas-snippet-dirs '("/Users/gabrielbma/Projects/bitbucket/yasnippet-snippets"))
+
+(yas-global-mode 1)
+
+;;;;;;;;; completion key
+;; (define-key yas-minor-mode-map [(tab)]        nil)
+;; (define-key yas-minor-mode-map (kbd "TAB")    nil)
+;; (define-key yas-minor-mode-map (kbd "<tab>")  nil)
+
+;; (defun try-flyspell (arg)
+;;   (if (nth 4 (syntax-ppss))
+;;       (call-interactively 'flyspell-correct-word-before-point)
+;;   nil))
+
+;; (setq hippie-expand-try-functions-list
+;;       '(try-flyspell
+;;         yas-hippie-try-expand 
+;;         try-expand-dabbrev-visible 
+;;         (lambda (arg) (call-interactively 'company-complete))
+
+;;         ))
+
+;; (global-set-key (kbd "<tab>")  'hippie-expand)
+;; (global-set-key (kbd "TAB")  'hippie-expand)
+;;;;;;;;;;
+
+;; markdown-mode
+(autoload 'markdown-mode "markdown-mode"
+  "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.txt\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.Rmd\\'" . markdown-mode))
+
+;; (smartparens-global-mode t)
+(smartparens-global-strict-mode t)
+
+;; ;; ess
+;; (add-to-list 'load-path "/Users/gabrielbma/Projects/ess/lisp/")
+;; (load "ess-site")
+;; (setenv "PATH"
+;;         (concat
+;;          (getenv "PATH") ":"         
+;;          "/usr/local/bin" ":" 
+;;          "/usr/texbin"))
+
+;; (setq exec-path (append exec-path '("/usr/local/bin" "/usr/texbin")))
+
+
+;; python-mode
+(setq python-shell-interpreter "/usr/local/opt/python3/bin/python3")
+
+;; projectile
+(projectile-global-mode)
+(setq projectile-enable-caching t)
+(add-to-list 'projectile-other-file-alist '("html" "js")) ;; switch from html -> js
+(add-to-list 'projectile-other-file-alist '("js" "html")) ;; switch from js -> html
+
+;; Disable to use Helm
+;; flx
+;; (require 'flx-ido)
+;; (ido-mode 1)
+;; (ido-everywhere 1)
+;; (flx-ido-mode 1)
+;; ;; disable ido faces to see flx highlights.
+;; (setq ido-enable-flex-matching t)
+;; (setq ido-use-faces nil)
+
+
+;; company
+;; NOTE: I cound not make company-yasnippet work with 
+;; ess-mode. So, to evaluate a yasnippet snippet
+;; one must use M-x company-yasnippet.
+(require 'company)
+;(add-hook 'after-init-hook 'global-company-mode)
+(global-company-mode 1)
+
+(setq company-idle-delay 0)
+(setq company-show-numbers t)
+(setq company-minimum-prefix-length 2)
+(setq company-dabbrev-downcase nil)
+(setq company-dabbrev-other-buffers t)
+(setq company-auto-complete nil)
+(setq company-dabbrev-code-other-buffers 'all)
+(setq company-dabbrev-code-everywhere t)
+(setq company-dabbrev-code-ignore-case t)
+
+(require 'helm-config)
+(helm-mode 1)
 (global-set-key (kbd "C-x b") 'helm-multi-files)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "M-x") 'helm-M-x)
@@ -131,9 +331,6 @@
   '(define-key css-mode-map (kbd "C-c b") 'web-beautify-css))
 
 
-;; magit mode
-(global-set-key (kbd "C-x g") 'magit-status)
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -141,7 +338,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (rainbow-mode web-mode tide flycheck smart-shift engine-mode iy-go-to-char multiple-cursors expand-region web-beautify zenburn-theme vlf smartparens python-mode markdown-mode js2-mode helm-swoop helm-projectile helm-company helm-c-yasnippet ensime emmet-mode company-statistics company-quickhelp company-auctex))))
+    (move-text smart-shift engine-mode iy-go-to-char multiple-cursors expand-region web-beautify zenburn-theme vlf smartparens python-mode markdown-mode js2-mode helm-swoop helm-projectile helm-company helm-c-yasnippet ensime emmet-mode company-statistics company-quickhelp company-auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -214,37 +411,5 @@
 (defengine youtube
   "http://www.youtube.com/results?aq=f&oq=&search_query=%s")
 
-(require 'smart-shift)
-(global-smart-shift-mode 1)
-
-;; Tide mode
-
-(defun setup-tide-mode ()
-  (interactive)
-  (tide-setup)
-  (flycheck-mode +1)
-  (setq flycheck-check-syntax-automatically '(save mode-enabled))
-  (eldoc-mode +1)
-  (tide-hl-identifier-mode +1)
-  ;; company is an optional dependency. You have to
-  ;; install it separately via package-install
-  ;; `M-x package-install [ret] company`
-  (company-mode +1))
-;; aligns annotation to the right hand side
-(setq company-tooltip-align-annotations t)
-;; formats the buffer before saving
-(add-hook 'before-save-hook 'tide-format-before-save)
-(add-hook 'typescript-mode-hook #'setup-tide-mode)
-
-; web-mode
-
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)) ; html files?
-
+;; move-text mode
+(move-text-default-bindings)
