@@ -25,8 +25,6 @@
 ;;   '(lambda () (progn
 ;;     (set-variable 'indent-tabs-mode nil))))
 
-;; keybinds for special keys
-
 
 ;; set keys for Apple keyboard, for emacs in OS X;
 ;; See: http://ergoemacs.org/emacs/emacs_hyper_super_keys.html
