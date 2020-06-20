@@ -1,4 +1,11 @@
-;; Look and fell:
+
+;; Starts emacs server. It should be used with an additional bash script in order to avoid starting server everytime a new Emacs instance is created.
+;; For more information check out terdon's answear on:
+;;  https://superuser.com/questions/462451/how-to-open-a-file-from-bash-command-line-in-the-already-open-emacs-instead-of-a
+;; Note: I ammend his answear with the correct path for emacs and by adding -c options to emacsclient. I placed the script inside the zsh custom configuration script.
+(server-start)
+
+;; Look and feel:
 (tool-bar-mode 0)
 (menu-bar-mode 0)
 (scroll-bar-mode 0)
@@ -11,11 +18,14 @@
 
 ;;(prefer-coding-system 'utf-8-unix)
 
+;; winner-mode to restory window position
+;; C-c <left> to restore the previous window configuration
+;; C-c <right> to return to the most recent configuration
+(winner-mode 1)
+
 ;; Recent files
 (recentf-mode 1)
 (global-set-key (kbd "C-x C-r") 'recentf-open-files)
-
-(winner-mode 1)
 
 ;; Prevent tab identation
 ;; Ref: http://stackoverflow.com/questions/45861/how-do-i-get-js2-mode-to-use-spaces-instead-of-tabs-in-emacs
@@ -47,6 +57,11 @@
             (lambda ()
                   (interactive)
                   (join-line -1)))
+
+;; ;; runs emacs in client mode
+;; (require 'server)
+;; (unless (server-running-p)
+;;   (server-start))
 
 ;;;;;;  Add Ons
 (require 'package)
@@ -180,7 +195,44 @@
 (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . markdown-mode))
 
 ;; smartparens
+(require 'smartparens-config)
 (smartparens-global-mode t)
+
+;; keybinds used by Smartparens' author
+(define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
+(define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
+
+(define-key smartparens-mode-map (kbd "C-M-d") 'sp-down-sexp)
+(define-key smartparens-mode-map (kbd "C-M-a") 'sp-backward-down-sexp)
+(define-key smartparens-mode-map (kbd "C-S-d") 'sp-beginning-of-sexp)
+(define-key smartparens-mode-map (kbd "C-S-a") 'sp-end-of-sexp)
+
+(define-key smartparens-mode-map (kbd "C-M-e") 'sp-up-sexp)
+(define-key smartparens-mode-map (kbd "C-M-u") 'sp-backward-up-sexp)
+(define-key smartparens-mode-map (kbd "C-M-t") 'sp-transpose-sexp)
+
+(define-key smartparens-mode-map (kbd "C-M-n") 'sp-forward-hybrid-sexp)
+(define-key smartparens-mode-map (kbd "C-M-p") 'sp-backward-hybrid-sexp)
+
+(define-key smartparens-mode-map (kbd "C-M-k") 'sp-kill-sexp)
+(define-key smartparens-mode-map (kbd "C-M-w") 'sp-copy-sexp)
+
+(define-key smartparens-mode-map (kbd "M-<delete>") 'sp-unwrap-sexp)
+(define-key smartparens-mode-map (kbd "M-<backspace>") 'sp-backward-unwrap-sexp)
+(define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
+(define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
+
+
+;; (eval-after-load 'smartparens-mode
+;;   '(progn 
+;;      (define-key smartparens-mode-map (kbd "C-M-k") 'sp-kill-sexp)
+;;      (define-key smartparens-mode-map (kbd "C-M-a") 'sp-beginning-of-sexp)
+;;      (define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
+;;      (define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
+;;      (define-key smartparens-mode-map (kbd "C-M-n") 'sp-next-sexp)
+;;      (define-key smartparens-mode-map (kbd "C-M-p") 'sp-previous-sexp)
+;;      (define-key smartparens-mode-map (kbd "M-[") 'sp-unwrap-sexp)
+;;      (define-key smartparens-mode-map (kbd "C-M-w") 'sp-copy-sexp)))
 
 ;; ;; ess
 ;; (add-to-list 'load-path "/Users/gabrielbma/Projects/ess/lisp/")
@@ -198,10 +250,20 @@
 
 
 ;; projectile
-(projectile-global-mode)
-(setq projectile-enable-caching t)
+(projectile-mode +1)
+;; (setq projectile-enable-caching t)
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
 (add-to-list 'projectile-other-file-alist '("html" "js")) ;; switch from html -> js
 (add-to-list 'projectile-other-file-alist '("js" "html")) ;; switch from js -> html
+
+;; helm-projectile
+(require 'helm-projectile)
+(helm-projectile-on)
+
+;; helm-projectile: fix a bug as explained in: https://github.com/bbatsov/projectile/issues/1302
+(setq projectile-git-submodule-command nil)
 
 ;; Disable to use Helm
 ;; flx
@@ -231,6 +293,8 @@
 (setq company-dabbrev-code-other-buffers 'all)
 (setq company-dabbrev-code-everywhere t)
 (setq company-dabbrev-code-ignore-case t)
+
+(add-to-list 'company-backends 'company-files)
 
 (require 'helm-config)
 (helm-mode 1)
@@ -335,7 +399,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (flycheck real-auto-save move-text smart-shift engine-mode iy-go-to-char multiple-cursors expand-region web-beautify zenburn-theme vlf smartparens python-mode markdown-mode js2-mode helm-swoop helm-projectile helm-company helm-c-yasnippet ensime emmet-mode company-statistics company-quickhelp company-auctex))))
+    (projectile flycheck real-auto-save move-text smart-shift engine-mode iy-go-to-char multiple-cursors expand-region web-beautify zenburn-theme vlf smartparens python-mode markdown-mode js2-mode helm-swoop helm-projectile helm-company helm-c-yasnippet ensime emmet-mode company-statistics company-quickhelp company-auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
