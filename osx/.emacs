@@ -1,4 +1,3 @@
-
 ;; Starts emacs server. It should be used with an additional bash script in order to avoid starting server everytime a new Emacs instance is created.
 ;; For more information check out terdon's answear on:
 ;;  https://superuser.com/questions/462451/how-to-open-a-file-from-bash-command-line-in-the-already-open-emacs-instead-of-a
@@ -26,6 +25,12 @@
 ;; Recent files
 (recentf-mode 1)
 (global-set-key (kbd "C-x C-r") 'recentf-open-files)
+
+;; dired
+(add-hook 'dired-mode-hook
+      (lambda ()
+        (dired-hide-details-mode)))
+
 
 ;; Prevent tab identation
 ;; Ref: http://stackoverflow.com/questions/45861/how-do-i-get-js2-mode-to-use-spaces-instead-of-tabs-in-emacs
@@ -73,6 +78,15 @@
 ;; enable elpy
 (elpy-enable)
 (setq elpy-rpc-virtualenv-path 'current)
+
+;;; Use flycheck instead of flymake
+(when (load "flycheck" t t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules)) (add-hook 'elpy-mode-hook 'flycheck-mode))
+
+;;; Auto-format code on save using Black
+(add-hook 'elpy-mode-hook (lambda ()
+                            (add-hook 'before-save-hook
+                                      'elpy-black-fix-code nil t)))
 
 ;; real-auto-save
 (require 'real-auto-save)
@@ -194,45 +208,6 @@
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . markdown-mode))
 
-;; smartparens
-(require 'smartparens-config)
-(smartparens-global-mode t)
-
-;; keybinds used by Smartparens' author
-(define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
-(define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
-
-(define-key smartparens-mode-map (kbd "C-M-d") 'sp-down-sexp)
-(define-key smartparens-mode-map (kbd "C-M-a") 'sp-backward-down-sexp)
-(define-key smartparens-mode-map (kbd "C-S-d") 'sp-beginning-of-sexp)
-(define-key smartparens-mode-map (kbd "C-S-a") 'sp-end-of-sexp)
-
-(define-key smartparens-mode-map (kbd "C-M-e") 'sp-up-sexp)
-(define-key smartparens-mode-map (kbd "C-M-u") 'sp-backward-up-sexp)
-(define-key smartparens-mode-map (kbd "C-M-t") 'sp-transpose-sexp)
-
-(define-key smartparens-mode-map (kbd "C-M-n") 'sp-forward-hybrid-sexp)
-(define-key smartparens-mode-map (kbd "C-M-p") 'sp-backward-hybrid-sexp)
-
-(define-key smartparens-mode-map (kbd "C-M-k") 'sp-kill-sexp)
-(define-key smartparens-mode-map (kbd "C-M-w") 'sp-copy-sexp)
-
-(define-key smartparens-mode-map (kbd "M-<delete>") 'sp-unwrap-sexp)
-(define-key smartparens-mode-map (kbd "M-<backspace>") 'sp-backward-unwrap-sexp)
-(define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
-(define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
-
-
-;; (eval-after-load 'smartparens-mode
-;;   '(progn 
-;;      (define-key smartparens-mode-map (kbd "C-M-k") 'sp-kill-sexp)
-;;      (define-key smartparens-mode-map (kbd "C-M-a") 'sp-beginning-of-sexp)
-;;      (define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
-;;      (define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
-;;      (define-key smartparens-mode-map (kbd "C-M-n") 'sp-next-sexp)
-;;      (define-key smartparens-mode-map (kbd "C-M-p") 'sp-previous-sexp)
-;;      (define-key smartparens-mode-map (kbd "M-[") 'sp-unwrap-sexp)
-;;      (define-key smartparens-mode-map (kbd "C-M-w") 'sp-copy-sexp)))
 
 ;; ;; ess
 ;; (add-to-list 'load-path "/Users/gabrielbma/Projects/ess/lisp/")
@@ -257,13 +232,6 @@
 
 (add-to-list 'projectile-other-file-alist '("html" "js")) ;; switch from html -> js
 (add-to-list 'projectile-other-file-alist '("js" "html")) ;; switch from js -> html
-
-;; helm-projectile
-(require 'helm-projectile)
-(helm-projectile-on)
-
-;; helm-projectile: fix a bug as explained in: https://github.com/bbatsov/projectile/issues/1302
-(setq projectile-git-submodule-command nil)
 
 ;; Disable to use Helm
 ;; flx
@@ -322,9 +290,12 @@
 
 ;; helm-projectile
 (require 'helm-projectile)
-(setq projectile-completion-system 'helm)
-(setq projectile-switch-project-action 'helm-projectile)
+;; (setq projectile-completion-system 'helm)
+;; (setq projectile-switch-project-action 'helm-projectile)
 (helm-projectile-on)
+;; helm-projectile: fix a bug as explained in: https://github.com/bbatsov/projectile/issues/1302
+(setq projectile-git-submodule-command nil)
+(global-set-key (kbd "C-x C-f") 'helm-projectile)
 
 
 ;; helm-swoop
@@ -397,9 +368,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(nyan-mode t)
+ '(nyan-wavy-trail t)
  '(package-selected-packages
    (quote
-    (projectile flycheck real-auto-save move-text smart-shift engine-mode iy-go-to-char multiple-cursors expand-region web-beautify zenburn-theme vlf smartparens python-mode markdown-mode js2-mode helm-swoop helm-projectile helm-company helm-c-yasnippet ensime emmet-mode company-statistics company-quickhelp company-auctex))))
+    (nyan-mode dired-git-info diredfl docker-compose-mode dockerfile-mode matlab-mode projectile flycheck real-auto-save move-text smart-shift engine-mode iy-go-to-char multiple-cursors expand-region web-beautify zenburn-theme vlf smartparens python-mode markdown-mode js2-mode helm-swoop helm-projectile helm-company helm-c-yasnippet ensime emmet-mode company-statistics company-quickhelp company-auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -472,5 +445,60 @@
 (defengine youtube
   "http://www.youtube.com/results?aq=f&oq=&search_query=%s")
 
+;; smartparens
+(require 'smartparens-config)
+(smartparens-global-mode t)
+
+;; keybinds used by Smartparens' author
+(define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
+(define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
+
+(define-key smartparens-mode-map (kbd "C-M-d") 'sp-down-sexp)
+(define-key smartparens-mode-map (kbd "C-M-a") 'sp-backward-down-sexp)
+(define-key smartparens-mode-map (kbd "C-S-d") 'sp-beginning-of-sexp)
+(define-key smartparens-mode-map (kbd "C-S-a") 'sp-end-of-sexp)
+
+(define-key smartparens-mode-map (kbd "C-M-e") 'sp-up-sexp)
+(define-key smartparens-mode-map (kbd "C-M-u") 'sp-backward-up-sexp)
+(define-key smartparens-mode-map (kbd "C-M-t") 'sp-transpose-sexp)
+
+(define-key smartparens-mode-map (kbd "C-M-n") 'sp-forward-hybrid-sexp)
+(define-key smartparens-mode-map (kbd "C-M-p") 'sp-backward-hybrid-sexp)
+
+(define-key smartparens-mode-map (kbd "C-M-k") 'sp-kill-sexp)
+(define-key smartparens-mode-map (kbd "C-M-w") 'sp-copy-sexp)
+
+(define-key smartparens-mode-map (kbd "C-M-<delete>") 'sp-unwrap-sexp)
+(define-key smartparens-mode-map (kbd "C-M-<backspace>") 'sp-backward-unwrap-sexp)
+
+
+;; (eval-after-load 'smartparens-mode
+;;   '(progn 
+;;      (define-key smartparens-mode-map (kbd "C-M-k") 'sp-kill-sexp)
+;;      (define-key smartparens-mode-map (kbd "C-M-a") 'sp-beginning-of-sexp)
+;;      (define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
+;;      (define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
+;;      (define-key smartparens-mode-map (kbd "C-M-n") 'sp-next-sexp)
+;;      (define-key smartparens-mode-map (kbd "C-M-p") 'sp-previous-sexp)
+;;      (define-key smartparens-mode-map (kbd "M-[") 'sp-unwrap-sexp)
+;;      (define-key smartparens-mode-map (kbd "C-M-w") 'sp-copy-sexp)))
+
 ;; move-text mode
 (move-text-default-bindings)
+
+;; dockerfile-mode
+(require 'dockerfile-mode)
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+
+;; docker-compose-mode
+(require 'docker-compose-mode)
+
+;; diredfl
+(require 'diredfl)
+(diredfl-global-mode)
+
+;; dired-git-info-mode
+(with-eval-after-load 'dired
+  (define-key dired-mode-map ")" 'dired-git-info-mode))
+;;; enable autmomatically in every Dired buffer
+;; (add-hook 'dired-after-readin-hook 'dired-git-info-auto-enable)
