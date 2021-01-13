@@ -376,10 +376,6 @@
 (require 'helm-rg)
 
 
-
-(require 'ensime)
-(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
-
 ;; autolad octave mode for *.m-files
        (autoload 'octave-mode "octave-mod" nil t)
        (setq auto-mode-alist (cons '("\\.m$" . octave-mode) auto-mode-alist))
@@ -414,8 +410,7 @@
  '(nyan-mode t)
  '(nyan-wavy-trail t)
  '(package-selected-packages
-   (quote
-    (yasnippet-snippets pip-requirements duplicate-thing org-superstar which-key helm-descbinds wgrep helm-rg helm-ag ag smart-jump nyan-mode dired-git-info diredfl docker-compose-mode dockerfile-mode matlab-mode projectile flycheck real-auto-save move-text engine-mode zenburn-theme smartparens python-mode markdown-mode js2-mode helm-swoop helm-projectile))))
+   '(magit yasnippet-snippets pip-requirements duplicate-thing org-superstar which-key helm-descbinds wgrep helm-rg helm-ag ag smart-jump nyan-mode dired-git-info diredfl docker-compose-mode dockerfile-mode matlab-mode projectile flycheck real-auto-save move-text engine-mode zenburn-theme smartparens python-mode markdown-mode js2-mode helm-swoop helm-projectile)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -432,12 +427,12 @@
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 
-(require 'iy-go-to-char)
-(add-to-list 'mc/cursor-specific-vars 'iy-go-to-char-start-pos)
-(global-set-key (kbd "C-c f") 'iy-go-to-char)
-(global-set-key (kbd "C-c F") 'iy-go-to-char-backward)
-(global-set-key (kbd "C-c ;") 'iy-go-to-or-up-to-continue)
-(global-set-key (kbd "C-c ,") 'iy-go-to-or-up-to-continue-backward)
+;; (require 'iy-go-to-char)
+;; (add-to-list 'mc/cursor-specific-vars 'iy-go-to-char-start-pos)
+;; (global-set-key (kbd "C-c f") 'iy-go-to-char)
+;; (global-set-key (kbd "C-c F") 'iy-go-to-char-backward)
+;; (global-set-key (kbd "C-c ;") 'iy-go-to-or-up-to-continue)
+;; (global-set-key (kbd "C-c ,") 'iy-go-to-or-up-to-continue-backward)
 
 (require 'engine-mode)
 (engine-mode t)
