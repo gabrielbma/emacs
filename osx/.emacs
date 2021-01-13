@@ -4,18 +4,44 @@
 ;; Note: I ammend his answear with the correct path for emacs and by adding -c options to emacsclient. I placed the script inside the zsh custom configuration script.
 (server-start)
 
-;; Look and feel:
-(tool-bar-mode 0)
-(menu-bar-mode 0)
-(scroll-bar-mode 0)
+;; Disable GUI components
+(tooltip-mode      -1)
+(menu-bar-mode     -1)
+(tool-bar-mode     -1)
+(menu-bar-mode     -1)
+(scroll-bar-mode   -1)
+(setq use-dialog-box     nil)
+(setq ring-bell-function 'ignore)
+
+;; Inhibit startup/splash screen
+(setq inhibit-splash-screen   t)
 (setq inhibit-startup-message t)
+
+;; Cursor
 (blink-cursor-mode 0)
-(show-paren-mode 1)
-(column-number-mode 1)
+(setq-default cursor-type 'box)
+;; (set-cursor-color "#BE81F7")
+(set-cursor-color "#FFFFFF")
+
+;; Narrowing
 (put 'narrow-to-region 'disabled nil)
+
+;; Short messages
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-;;(prefer-coding-system 'utf-8-unix)
+;; Show paren
+(setq show-paren-delay 0)
+(setq show-paren-style 'parenthesis)
+(show-paren-mode 1)
+
+;; Menu line
+(column-number-mode t)
+
+;; Auto revert buffer
+(global-auto-revert-mode 1)
+
+;; Cycle through amounts of spacing
+(global-set-key (kbd "s-SPC") 'cycle-spacing)
 
 ;; winner-mode to restory window position
 ;; C-c <left> to restore the previous window configuration
@@ -26,19 +52,41 @@
 (recentf-mode 1)
 (global-set-key (kbd "C-x C-r") 'recentf-open-files)
 
+;; window management
+(global-set-key (kbd "M-P") 'windmove-up)
+(global-set-key (kbd "M-N") 'windmove-down)
+(global-set-key (kbd "M-F") 'windmove-right)
+(global-set-key (kbd "M-B") 'windmove-left)
+
 ;; dired
+(setq dired-dwim-target t)
 (add-hook 'dired-mode-hook
       (lambda ()
         (dired-hide-details-mode)))
 
+;; show line show
+(defun goto-line-show ()
+  "Show line numbers temporarily, while prompting for the line number input."
+  (interactive)
+  (unwind-protect
+      (progn
+        (linum-mode 1)
+        (call-interactively #'goto-line))
+    (linum-mode -1)))
+(global-set-key (kbd "M-g M-g") 'goto-line-show)
 
-;; Prevent tab identation
-;; Ref: http://stackoverflow.com/questions/45861/how-do-i-get-js2-mode-to-use-spaces-instead-of-tabs-in-emacs
+;; Toggle comments for regions and lines
+(global-set-key (kbd "M-;") 'comment-line)
 
+;; Indent settings
 (setq-default indent-tabs-mode nil)
-;; (setq js2-mode-hook
-;;   '(lambda () (progn
-;;     (set-variable 'indent-tabs-mode nil))))
+(setq-default tab-width          4)
+(setq tab-width                  4)
+(setq-default tab-always-indent nil)
+(setq-default c-basic-offset     4)
+(setq-default standart-indent    4)
+(setq-default lisp-body-indent   4)
+(setq indent-line-function  'insert-tab)
 
 
 ;; set keys for Apple keyboard, for emacs in OS X;
@@ -47,12 +95,6 @@
 (setq mac-option-modifier 'super) ; make opt key do Super
 (setq mac-control-modifier 'control) ; make Control key do Control
 (setq ns-function-modifier 'hyper)  ; make Fn key do Hyper
-
-;; window management
-(global-set-key (kbd "M-P") 'windmove-up)
-(global-set-key (kbd "M-N") 'windmove-down)
-(global-set-key (kbd "M-F") 'windmove-right)
-(global-set-key (kbd "M-B") 'windmove-left)
 
 ;; That keybind is useful with multi-cursor mode
 (global-set-key (kbd "H-SPC") 'set-rectangular-region-anchor)
@@ -68,7 +110,7 @@
 ;; (unless (server-running-p)
 ;;   (server-start))
 
-;;;;;;  Add Ons
+;;;;;;  Add Ons ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'package)
 (add-to-list 'package-archives
              ; warning not using the MELPA stable. To use MELPA stable repo, replace melpa with melpa-stable
@@ -78,6 +120,20 @@
 ;; enable elpy
 (elpy-enable)
 (setq elpy-rpc-virtualenv-path 'current)
+
+;; Explicitly add company-mode with yasnippet support to company-backends
+;; This is a workaround which makes company mode exhibis
+;; a list of yasnippet's snippets:
+;; https://github.com/jorgenschaefer/elpy/issues/530
+(setq elpy-modules (delq 'elpy-module-company elpy-modules))
+(add-hook 'python-mode-hook
+          (lambda ()
+            ;; explicitly load company for the occasion when the deferred
+            ;; loading with use-package hasn't kicked in yet
+            (company-mode)
+            (add-to-list 'company-backends
+                         (company-mode/backend-with-yas 'elpy-company-backend))))
+
 
 ;;; Use flycheck instead of flymake
 (when (load "flycheck" t t)
@@ -136,15 +192,8 @@
 ;; To RefTex work properly with AUCTex
 (setq reftex-plug-into-AUCTeX t)
 
-;; disable to use Helm
-;; (require 'ido)
-;; (ido-mode t)
-
 (require 'zenburn-theme)
 (load-theme 'zenburn t)
-
-;; This is your old M-x.
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 (require 'js2-mode)
 (add-to-list 'auto-mode-alist '("\\.js$". js2-mode))
@@ -155,11 +204,6 @@
 (define-key emmet-mode-keymap (kbd "C-j") nil)
 (define-key emmet-mode-keymap (kbd "M-e") 'emmet-expand-line)
 
-;; disable to switch to company-mode
-;;(require 'ac-emmet)
-;;(add-hook 'sgml-mode-hook 'ac-emmet-html-setup)
-;;(add-hook 'css-mode-hook 'ac-emmet-css-setup)
-
 (require 'flycheck)
 (global-flycheck-mode)
 ;; (exec-path-from-shell-initialize)
@@ -167,37 +211,17 @@
                                         ;enable running flycheck from Finder
 ;; (when (memq window-system '(mac ns))
 ;;   (exec-path-from-shell-initialize))
-
 (add-hook 'js-mode-hook
           (lambda () (flycheck-mode t)))
 
+
 (require 'yasnippet)
-
-(setq yas-snippet-dirs '("/Users/gabrielbma/Projects/bitbucket/yasnippet-snippets"))
-
+;; (require 'yasnippet-snippets)
+;; (setq yas-snippet-dirs '("/Users/gabrielbma/Projects/yasnippet-snippets"))
+(add-to-list 'yas-snippet-dirs '"/Users/gabrielbma/Projects/yasnippet-snippets")
 (yas-global-mode 1)
 
-;;;;;;;;; completion key
-;; (define-key yas-minor-mode-map [(tab)]        nil)
-;; (define-key yas-minor-mode-map (kbd "TAB")    nil)
-;; (define-key yas-minor-mode-map (kbd "<tab>")  nil)
-
-;; (defun try-flyspell (arg)
-;;   (if (nth 4 (syntax-ppss))
-;;       (call-interactively 'flyspell-correct-word-before-point)
-;;   nil))
-
-;; (setq hippie-expand-try-functions-list
-;;       '(try-flyspell
-;;         yas-hippie-try-expand 
-;;         try-expand-dabbrev-visible 
-;;         (lambda (arg) (call-interactively 'company-complete))
-
-;;         ))
-
-;; (global-set-key (kbd "<tab>")  'hippie-expand)
-;; (global-set-key (kbd "TAB")  'hippie-expand)
-;;;;;;;;;;
+(require 'yasnippet-snippets)
 
 ;; markdown-mode
 (autoload 'markdown-mode "markdown-mode"
@@ -221,37 +245,16 @@
 ;; (setq exec-path (append exec-path '("/usr/local/bin" "/usr/texbin")))
 
 
-;; python-mode is using elpy to be set, don't forget to enable pyvenv-activate
-
-
 ;; projectile
 (projectile-mode +1)
-;; (setq projectile-enable-caching t)
 (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-
 (add-to-list 'projectile-other-file-alist '("html" "js")) ;; switch from html -> js
 (add-to-list 'projectile-other-file-alist '("js" "html")) ;; switch from js -> html
 
-;; Disable to use Helm
-;; flx
-;; (require 'flx-ido)
-;; (ido-mode 1)
-;; (ido-everywhere 1)
-;; (flx-ido-mode 1)
-;; ;; disable ido faces to see flx highlights.
-;; (setq ido-enable-flex-matching t)
-;; (setq ido-use-faces nil)
-
-
-;; company
-;; NOTE: I cound not make company-yasnippet work with 
-;; ess-mode. So, to evaluate a yasnippet snippet
-;; one must use M-x company-yasnippet.
 (require 'company)
-;(add-hook 'after-init-hook 'global-company-mode)
-(global-company-mode 1)
-
+(add-hook 'after-init-hook 'global-company-mode)
+(global-company-mode)
 (setq company-idle-delay 0)
 (setq company-show-numbers t)
 (setq company-minimum-prefix-length 2)
@@ -262,7 +265,49 @@
 (setq company-dabbrev-code-everywhere t)
 (setq company-dabbrev-code-ignore-case t)
 
-(add-to-list 'company-backends 'company-files)
+;; company-math
+;; require company-math: global activation of the unicode symbol completion 
+;; (add-to-list 'company-backends 'company-math-symbols-unicode) temp-disabled
+
+;; company-auctex
+;; (company-auctex-init) temp-disabled                  ;
+
+;; ;; yasnippet-temp-disabled
+;; company-yasnippet
+;; Add yasnippet support for all company backends
+;; https://github.com/syl20bnr/spacemacs/pull/179
+(defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
+(defun company-yasnippet-or-completion ()
+  "Solve company yasnippet conflicts."
+  (interactive)
+  (let ((yas-fallback-behavior
+         (apply 'company-complete-common nil)))
+    (yas-expand)))
+
+(add-hook 'company-mode-hook
+          (lambda ()
+            (substitute-key-definition
+             'company-complete-common
+             'company-yasnippet-or-completion
+             company-active-map)))
+(defun company-mode/backend-with-yas (backend)
+  (if (or (not company-mode/enable-yas) (and (listp backend)    (member 'company-yasnippet backend)))
+      backend
+    (append (if (consp backend) backend (list backend))
+            '(:with company-yasnippet))))
+(setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+
+;; temp-disabled
+;; (require 'company-statistics)
+;; (company-statistics-mode)
+
+;; temp-disabled
+;; (company-quickhelp-mode 1)
+
+;; (setq-local company-backends 
+;;     (append '((company-yasnippet company-R-args company-R-objects)) 
+;;              company-backends))
+
 
 (require 'helm-config)
 (helm-mode 1)
@@ -270,33 +315,34 @@
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-r") 'helm-recentf)
+(global-set-key (kbd "C-h a") 'helm-apropos)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring) ;; replaces emacs' kill ring
 
 (helm-autoresize-mode 1)
 (setq helm-M-x-fuzzy-match t)
 (setq helm-buffers-fuzzy-matching t
       helm-recentf-fuzzy-match    t)
 
-;; helm-company
-(autoload 'helm-company "helm-company") ;; Not necessary if using ELPA package
-(eval-after-load 'company
-  '(progn
-     (define-key company-mode-map (kbd "C-:") 'helm-company)
-     (define-key company-active-map (kbd "C-:") 'helm-company)))
+;; helm-company temp-disabled
+;; (autoload 'helm-company "helm-company") ;; Not necessary if using ELPA package
+;; (eval-after-load 'company
+;;   '(progn
+;;      (define-key company-mode-map (kbd "C-:") 'helm-company)
+;;      (define-key company-active-map (kbd "C-:") 'helm-company)))
 
-;; helm-c-yasnippet
-(require 'helm-c-yasnippet)
-(setq helm-yas-space-match-any-greedy t)
-(global-set-key (kbd "C-c y") 'helm-yas-complete)
+;; ;; yasnippet-temp-disabled
+;; ;; helm-c-yasnippet
+;; (require 'helm-c-yasnippet)
+;; (setq helm-yas-space-match-any-greedy t)
+;; (global-set-key (kbd "C-c y") 'helm-yas-complete)
 
 ;; helm-projectile
 (require 'helm-projectile)
-;; (setq projectile-completion-system 'helm)
-;; (setq projectile-switch-project-action 'helm-projectile)
 (helm-projectile-on)
+
 ;; helm-projectile: fix a bug as explained in: https://github.com/bbatsov/projectile/issues/1302
 (setq projectile-git-submodule-command nil)
-(global-set-key (kbd "C-x C-f") 'helm-projectile)
-
+;; (global-set-key (kbd "C-x C-f") 'helm-projectile)
 
 ;; helm-swoop
 (require 'helm-swoop)
@@ -305,34 +351,31 @@
 (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
 (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
 
-;; company-math
-;; require company-math: global activation of the unicode symbol completion 
-(add-to-list 'company-backends 'company-math-symbols-unicode)
+;; When doing isearch, hand the word over to helm-swoop
+(define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+;; From helm-swoop to helm-multi-swoop-all
+(define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+;; Move up and down like isearch
+(define-key helm-swoop-map (kbd "C-r") 'helm-previous-line)
+(define-key helm-swoop-map (kbd "C-s") 'helm-next-line)
+(define-key helm-multi-swoop-map (kbd "C-r") 'helm-previous-line)
+(define-key helm-multi-swoop-map (kbd "C-s") 'helm-next-line)
+;; If you prefer fuzzy matching
+(setq helm-swoop-use-fuzzy-match t)
+;; Optional face for line numbers
+;; Face name is `helm-swoop-line-number-face`
+;; (setq helm-swoop-use-line-number-face t)
+;; If this value is t, split window inside the current window
+(setq helm-swoop-split-with-multiple-windows t)
+;; Split direcion. 'split-window-vertically or 'split-window-horizontally
+(setq helm-swoop-split-direction 'split-window-vertically)
+;; If nil, you can slightly boost invoke speed in exchange for text color
+(setq helm-swoop-speed-or-color t)
 
-;; company-auctex
-(company-auctex-init)
+(require 'helm-ag)
+(require 'helm-rg)
 
-;; company-yasnippet
-;; Add yasnippet support for all company backends
-;; https://github.com/syl20bnr/spacemacs/pull/179
-(defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
 
-(defun company-mode/backend-with-yas (backend)
-  (if (or (not company-mode/enable-yas) (and (listp backend)    (member 'company-yasnippet backend)))
-      backend
-    (append (if (consp backend) backend (list backend))
-            '(:with company-yasnippet))))
-
-(setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
-
-(require 'company-statistics)
-(company-statistics-mode)
-
-(company-quickhelp-mode 1)
-
-(setq-local company-backends 
-    (append '((company-yasnippet company-R-args company-R-objects)) 
-             company-backends))
 
 (require 'ensime)
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
@@ -372,7 +415,7 @@
  '(nyan-wavy-trail t)
  '(package-selected-packages
    (quote
-    (nyan-mode dired-git-info diredfl docker-compose-mode dockerfile-mode matlab-mode projectile flycheck real-auto-save move-text smart-shift engine-mode iy-go-to-char multiple-cursors expand-region web-beautify zenburn-theme vlf smartparens python-mode markdown-mode js2-mode helm-swoop helm-projectile helm-company helm-c-yasnippet ensime emmet-mode company-statistics company-quickhelp company-auctex))))
+    (yasnippet-snippets pip-requirements duplicate-thing org-superstar which-key helm-descbinds wgrep helm-rg helm-ag ag smart-jump nyan-mode dired-git-info diredfl docker-compose-mode dockerfile-mode matlab-mode projectile flycheck real-auto-save move-text engine-mode zenburn-theme smartparens python-mode markdown-mode js2-mode helm-swoop helm-projectile))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -502,3 +545,51 @@
   (define-key dired-mode-map ")" 'dired-git-info-mode))
 ;;; enable autmomatically in every Dired buffer
 ;; (add-hook 'dired-after-readin-hook 'dired-git-info-auto-enable)
+
+
+;; dumb-jump 
+(setq dumb-jump-prefer-searcher 'rg)
+(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+(eval-after-load 'dumb-jump-mode
+  '(progn 
+     (define-key dumb-jump-mode-map (kbd "M-g o") 'dumb-jump-go-other-window)
+     (define-key dumb-jump-mode-map (kbd "M-g j") 'dumb-jump-go)
+     (define-key dumb-jump-mode-map (kbd "M-g q") 'dumb-jump-quick-look)
+     (setq dumb-jump-selector 'helm)
+     (setq dumb-jump-prefer-searcher 'ag)))
+
+
+;; smart-jump (disable because it changes the keybind M-P)
+;; (require 'smart-jump)
+;; (smart-jump-setup-default-registers)
+
+;; I am going to use rp for searching but I need to investigate which mode 
+;; is the best at the moment.
+;; This article discuss the searching problem very well:
+;; https://with-emacs.com/posts/tutorials/search-and-replacement-techniques/
+;; and this is a good thread to have an impression of what people are doing:
+;; https://www.reddit.com/r/emacs/comments/dgglux/search_and_replace_options/
+;; Options for rg are: deadgrep, helm-grep, helm-rg, rg.el
+
+;; nyan-mode
+(require 'nyan-mode)
+(setq nyan-bar-length 15)
+
+;; which-key
+(require 'which-key)
+(which-key-mode)
+(setq which-key-idle-delay 0.3)
+(which-key-setup-minibuffer)
+;;; .emacs ends here
+
+;; org-superstar
+(require 'org-superstar)
+(add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
+
+;; duplicate-thing
+(require 'duplicate-thing)
+(global-set-key (kbd "M-c") 'duplicate-thing)
+
+(require 'pip-requirements)
+
+
