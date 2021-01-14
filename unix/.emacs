@@ -2,7 +2,7 @@
 ;; For more information check out terdon's answear on:
 ;;  https://superuser.com/questions/462451/how-to-open-a-file-from-bash-command-line-in-the-already-open-emacs-instead-of-a
 ;; Note: I ammend his answear with the correct path for emacs and by adding -c options to emacsclient. I placed the script inside the zsh custom configuration script.
-(server-start)
+;;(server-start)
 
 ;; Disable GUI components
 (tooltip-mode      -1)
@@ -105,184 +105,229 @@
                   (interactive)
                   (join-line -1)))
 
-;; ;; runs emacs in client mode
-;; (require 'server)
-;; (unless (server-running-p)
-;;   (server-start))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;  Add Ons ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'package)
-(add-to-list 'package-archives
-             ; warning not using the MELPA stable. To use MELPA stable repo, replace melpa with melpa-stable
-             '("melpa" . "http://melpa.org/packages/") t)
+
+;; Add melpa to your packages repositories
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+
 (package-initialize)
 
-;; enable elpy
-(elpy-enable)
-(setq elpy-rpc-virtualenv-path 'current)
+;; Install use-package if not already installed
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 
-;; Explicitly add company-mode with yasnippet support to company-backends
-;; This is a workaround which makes company mode exhibis
-;; a list of yasnippet's snippets:
-;; https://github.com/jorgenschaefer/elpy/issues/530
-(setq elpy-modules (delq 'elpy-module-company elpy-modules))
-(add-hook 'python-mode-hook
-          (lambda ()
-            ;; explicitly load company for the occasion when the deferred
-            ;; loading with use-package hasn't kicked in yet
-            (company-mode)
-            (add-to-list 'company-backends
-                         (company-mode/backend-with-yas 'elpy-company-backend))))
+(require 'use-package)
+
+;; Enable defer and ensure by default for use-package
+;; Keep auto-save/backup files separate from source code:  https://github.com/scalameta/metals/issues/1027
+(setq use-package-always-defer t
+      use-package-always-ensure t
+      backup-directory-alist `((".*" . ,temporary-file-directory))
+      auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+
+(use-package zenburn-theme
+  :demand t
+  :config
+  (load-theme 'zenburn t))
+
+(use-package windswap
+  :demand
+  :bind
+  (("H-n" . windswap-down)
+   ("H-p" . windswap-up)
+   ("H-b" . windswap-left)
+   ("H-f" . windswap-right))
+  :config
+  (windswap-default-keybindings))
+
+(use-package which-key
+  :config
+  (which-key-mode)
+  (setq which-key-idle-delay 0.3)
+  (which-key-setup-minibuffer))
+
+(use-package nyan-mode
+  :if window-system
+  :demand t
+  :config
+  (nyan-mode 1))
+
+(use-package flycheck
+  :init (global-flycheck-mode)
+  :config (global-flycheck-mode))
+
+(use-package yasnippet
+    :config
+    (add-to-list 'yas-snippet-dirs '"/Users/gabrielbma/Projects/yasnippet-snippets")
+    (yas-global-mode 1))
+
+(use-package yasnippet-snippets)
+
+(use-package real-auto-save
+    :hook (prog-mode . real-auto-save-mode)
+    :config (setq real-auto-save-interval 1))
+
+(use-package magit
+    :bind (("C-x g" . magit-status)))
+
+(use-package git-messenger
+  :bind ("C-x G" . git-messenger:popup-message)
+  :config
+  (setq git-messenger:show-detail t
+        git-messenger:use-magit-popup t))
+
+(use-package markdown-mode
+    :config
+    (add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
+    (add-to-list 'auto-mode-alist '("\\.txt\\'" . markdown-mode))
+    (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+    (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+    (add-to-list 'auto-mode-alist '("\\.Rmd\\'" . markdown-mode)))
+
+(use-package vlf)
+
+(use-package expand-region
+    :bind (("C-=" . er/expand-region)))
+
+(use-package multiple-cursors
+    :bind
+    (("C-S-c C-S-c" . mc/edit-lines)
+    ("C->" . mc/mark-next-like-this)
+    ("C-<" . mc/mark-previous-like-this)
+    ("C-c C-<" . mc/mark-all-like-this)))
+
+(use-package move-text
+    :demand t
+    :config
+    (move-text-default-bindings))
+
+(use-package smartparens
+    :config
+    (smartparens-global-mode t)
+    :bind (:map smartparens-mode-map
+                ("C-M-f" . sp-forward-sexp)
+                ("C-M-b" . sp-backward-sexp)
+                ( "C-M-d" . sp-down-sexp)
+                ("C-M-a" . sp-backward-down-sexp)
+                ("C-S-d" . sp-beginning-of-sexp)
+                ("C-S-a" . sp-end-of-sexp)
+                ( "C-M-e" . sp-up-sexp)
+                ("C-M-u" . sp-backward-up-sexp)
+                ("C-M-t" . sp-transpose-sexp)
+                ( "C-M-n" . sp-forward-hybrid-sexp)
+                ("C-M-p" . sp-backward-hybrid-sexp)
+                ( "C-M-k" . sp-kill-sexp)
+                ("C-M-w" . sp-copy-sexp)
+                ( "C-M-<delete>" . sp-unwrap-sexp)
+                ("C-M-<backspace>" . sp-backward-unwrap-sexp)))
+
+(use-package org-superstar
+    :hook (org-mode . (lambda ()
+                        (org-superstar-mode 1))))
+
+(use-package duplicate-thing
+    :bind ("M-c" . duplicate-thing))
+
+(use-package pip-requirements)
+
+(use-package dockerfile-mode
+    :config
+    (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
+
+(use-package docker-compose-mode)
+
+(use-package diredfl
+    :config
+    (diredfl-global-mode))
+
+(use-package dired-git-info
+:bind (:map dired-mode-map (")" . dired-git-info-mode)))
+
+(use-package shell-pop
+  :init
+  (setq shell-pop-full-span t)
+  :bind (("C-c s" . shell-pop)))
+
+(use-package vterm
+    :ensure t)
+
+(use-package vterm-toggle
+  :bind (("H-z" . vterm-toggle)
+         ("H-F" . vterm-toggle-forward)
+         ("H-B" . vterm-toggle-backward)))
+
+(use-package multi-vterm :ensure t)
+
+(use-package projectile
+    :bind (:map projectile-mode-map
+                ("s-p" . projectile-command-map)
+                ("C-c p" . projectile-command-map))
+    :config
+        ((add-to-list 'projectile-other-file-alist '("html" "js"))
+        (add-to-list 'projectile-other-file-alist '("js" "html"))))
 
 
-;;; Use flycheck instead of flymake
-(when (load "flycheck" t t)
-  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules)) (add-hook 'elpy-mode-hook 'flycheck-mode))
+;; begin company-mode setup ;;;
 
-;;; Auto-format code on save using Black
-(add-hook 'elpy-mode-hook (lambda ()
-                            (add-hook 'before-save-hook
-                                      'elpy-black-fix-code nil t)))
-
-;; real-auto-save
-(require 'real-auto-save)
-(add-hook 'prog-mode-hook 'real-auto-save-mode)
-(setq real-auto-save-interval 1)
-
-;; magit mode
-(global-set-key (kbd "C-x g") 'magit-status)
-
-;;AucTex and Preview-Latex
-;;(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-;;(setq reftex-plug-into-AUCTeX t)
-;;(setq-default ispell-program-name "aspell")  
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq-default TeX-master nil)
-
-(add-hook 'LaTeX-mode-hook 'visual-line-mode)
-(add-hook 'LaTeX-mode-hook 'flyspell-mode)
-(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-(setq reftex-plug-into-AUCTeX t)
-(setq TeX-PDF-mode t)
-;; (add-to-list 'exec-path "/Library/TeX/texbin")
-
-(setenv "PATH" (concat (getenv "PATH") ":/Library/TeX/texbin"))
-(setq exec-path (append exec-path '("/Library/TeX/texbin")))
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin/"))
-(setq exec-path (append exec-path '("/usr/local/bin/")))
-
-;; 
-;; (getenv "PATH")
-;;  (setenv "PATH"
-;;          (concat
-;;           "/Library/TeX/texbin/" ":"
-;; (getenv "PATH")))
-
-
-;; use Skim as default pdf viewer
-;; Skim's displayline is used for forward search (from .tex to .pdf)
-;; option -b highlights the current line; option -g opens Skim in the background  
-(setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
-(setq TeX-view-program-list
-      '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
-
-
-;; To RefTex work properly with AUCTex
-(setq reftex-plug-into-AUCTeX t)
-
-(require 'zenburn-theme)
-(load-theme 'zenburn t)
-
-(require 'js2-mode)
-(add-to-list 'auto-mode-alist '("\\.js$". js2-mode))
-
-(require 'emmet-mode)
-(add-hook 'sgml-mode-hook 'emmet-mode)
-(add-hook 'css-mode-hook  'emmet-mode)
-(define-key emmet-mode-keymap (kbd "C-j") nil)
-(define-key emmet-mode-keymap (kbd "M-e") 'emmet-expand-line)
-
-(require 'flycheck)
-(global-flycheck-mode)
-;; (exec-path-from-shell-initialize)
-;; (add-hook 'after-init-hook #'global-flycheck-mode)
-                                        ;enable running flycheck from Finder
-;; (when (memq window-system '(mac ns))
-;;   (exec-path-from-shell-initialize))
-(add-hook 'js-mode-hook
-          (lambda () (flycheck-mode t)))
-
-
-(require 'yasnippet)
-;; (require 'yasnippet-snippets)
-;; (setq yas-snippet-dirs '("/Users/gabrielbma/Projects/yasnippet-snippets"))
-(add-to-list 'yas-snippet-dirs '"/Users/gabrielbma/Projects/yasnippet-snippets")
-(yas-global-mode 1)
-
-(require 'yasnippet-snippets)
-
-;; markdown-mode
-(autoload 'markdown-mode "markdown-mode"
-  "Major mode for editing Markdown files" t)
-(add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.txt\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.Rmd\\'" . markdown-mode))
-
-
-;; ;; ess
-;; (add-to-list 'load-path "/Users/gabrielbma/Projects/ess/lisp/")
-;; (load "ess-site")
-;; (setenv "PATH"
-;;         (concat
-;;          (getenv "PATH") ":"         
-;;          "/usr/local/bin" ":" 
-;;          "/usr/texbin"))
-
-;; (setq exec-path (append exec-path '("/usr/local/bin" "/usr/texbin")))
-
-
-;; projectile
-(projectile-mode +1)
-(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-(add-to-list 'projectile-other-file-alist '("html" "js")) ;; switch from html -> js
-(add-to-list 'projectile-other-file-alist '("js" "html")) ;; switch from js -> html
-
-(require 'company)
-(add-hook 'after-init-hook 'global-company-mode)
-(global-company-mode)
-(setq company-idle-delay 0)
-(setq company-show-numbers t)
-(setq company-minimum-prefix-length 2)
-(setq company-dabbrev-downcase nil)
-(setq company-dabbrev-other-buffers t)
-(setq company-auto-complete nil)
-(setq company-dabbrev-code-other-buffers 'all)
-(setq company-dabbrev-code-everywhere t)
-(setq company-dabbrev-code-ignore-case t)
-
-;; company-math
-;; require company-math: global activation of the unicode symbol completion 
-;; (add-to-list 'company-backends 'company-math-symbols-unicode) temp-disabled
-
-;; company-auctex
-;; (company-auctex-init) temp-disabled                  ;
-
-;; ;; yasnippet-temp-disabled
-;; company-yasnippet
-;; Add yasnippet support for all company backends
-;; https://github.com/syl20bnr/spacemacs/pull/179
-(defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
 (defun company-yasnippet-or-completion ()
-  "Solve company yasnippet conflicts."
-  (interactive)
-  (let ((yas-fallback-behavior
-         (apply 'company-complete-common nil)))
-    (yas-expand)))
+    "Solve company yasnippet conflicts."
+    (interactive)
+    (let ((yas-fallback-behavior
+           (apply 'company-complete-common nil)))
+        (yas-expand)))
+
+(defun company-mode/backend-with-yas (backend)
+  (if (or (not company-mode/enable-yas) 
+          (and (listp backend)    
+               (member 'company-yasnippet backend)))
+          backend
+      (append (if (consp backend) backend (list backend))
+              '(:with company-yasnippet))))
+
+
+
+;; (use-package company
+;;     :demand t
+;;     :config
+;;     (setq company-idle-delay 0)
+;;     (setq company-show-numbers t)
+;;     (setq company-minimum-prefix-length 2)
+;;     (setq company-dabbrev-downcase nil)
+;;     (setq company-dabbrev-other-buffers t)
+;;     (setq company-auto-complete nil)
+;;     (setq company-dabbrev-code-other-buffers 'all)
+;;     (setq company-dabbrev-code-everywhere t)
+;;     (setq company-dabbrev-code-ignore-case t)
+;;     (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
+;;     (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+;;     :hook
+;;     (after-init . global-company-mode)
+;;     (company-mode . (lambda ()
+;;                         (substitute-key-definition
+;;                          'company-complete-common
+;;                          'company-yasnippet-or-completion
+;;                          company-active-map))))
+
+
+(defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
+(use-package company
+    :demand t
+    :config
+    (setq company-idle-delay 0)
+    (setq company-show-numbers t)
+    (setq company-minimum-prefix-length 2)
+    (setq company-dabbrev-downcase nil)
+    (setq company-dabbrev-other-buffers t)
+    (setq company-auto-complete nil)
+    (setq company-dabbrev-code-other-buffers 'all)
+    (setq company-dabbrev-code-everywhere t)
+    (setq company-dabbrev-code-ignore-case t)
+    (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+    :hook
+    (after-init . global-company-mode))
 
 (add-hook 'company-mode-hook
           (lambda ()
@@ -290,301 +335,122 @@
              'company-complete-common
              'company-yasnippet-or-completion
              company-active-map)))
-(defun company-mode/backend-with-yas (backend)
-  (if (or (not company-mode/enable-yas) (and (listp backend)    (member 'company-yasnippet backend)))
-      backend
-    (append (if (consp backend) backend (list backend))
-            '(:with company-yasnippet))))
 (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+;;end company-mode setup
 
-;; temp-disabled
-;; (require 'company-statistics)
-;; (company-statistics-mode)
+(use-package helm
+    :config
+    (helm-autoresize-mode 1)
+    (setq helm-M-x-fuzzy-match t)
+    (setq helm-buffers-fuzzy-matching t
+          helm-recentf-fuzzy-match    t)
+    :bind 
+    (("M-x" . helm-M-x)
+    ("C-x b" . helm-multi-files)
+    ("C-x C-f" . helm-find-files)
+    ("C-x C-r" . helm-recentf)
+    ("C-h a" . helm-apropos)
+    ("M-y" . helm-show-kill-ring)))
 
-;; temp-disabled
-;; (company-quickhelp-mode 1)
-
-;; (setq-local company-backends 
-;;     (append '((company-yasnippet company-R-args company-R-objects)) 
-;;              company-backends))
-
-
-(require 'helm-config)
-(helm-mode 1)
-(global-set-key (kbd "C-x b") 'helm-multi-files)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-x C-r") 'helm-recentf)
-(global-set-key (kbd "C-h a") 'helm-apropos)
-(global-set-key (kbd "M-y") 'helm-show-kill-ring) ;; replaces emacs' kill ring
-
-(helm-autoresize-mode 1)
-(setq helm-M-x-fuzzy-match t)
-(setq helm-buffers-fuzzy-matching t
-      helm-recentf-fuzzy-match    t)
-
-;; helm-company temp-disabled
-;; (autoload 'helm-company "helm-company") ;; Not necessary if using ELPA package
-;; (eval-after-load 'company
-;;   '(progn
-;;      (define-key company-mode-map (kbd "C-:") 'helm-company)
-;;      (define-key company-active-map (kbd "C-:") 'helm-company)))
-
-;; ;; yasnippet-temp-disabled
-;; ;; helm-c-yasnippet
-;; (require 'helm-c-yasnippet)
-;; (setq helm-yas-space-match-any-greedy t)
-;; (global-set-key (kbd "C-c y") 'helm-yas-complete)
-
-;; helm-projectile
-(require 'helm-projectile)
-(helm-projectile-on)
-
-;; helm-projectile: fix a bug as explained in: https://github.com/bbatsov/projectile/issues/1302
-(setq projectile-git-submodule-command nil)
-;; (global-set-key (kbd "C-x C-f") 'helm-projectile)
-
-;; helm-swoop
-(require 'helm-swoop)
-(global-set-key (kbd "M-i") 'helm-swoop)
-(global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
-(global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
-(global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
-
-;; When doing isearch, hand the word over to helm-swoop
-(define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
-;; From helm-swoop to helm-multi-swoop-all
-(define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
-;; Move up and down like isearch
-(define-key helm-swoop-map (kbd "C-r") 'helm-previous-line)
-(define-key helm-swoop-map (kbd "C-s") 'helm-next-line)
-(define-key helm-multi-swoop-map (kbd "C-r") 'helm-previous-line)
-(define-key helm-multi-swoop-map (kbd "C-s") 'helm-next-line)
-;; If you prefer fuzzy matching
-(setq helm-swoop-use-fuzzy-match t)
-;; Optional face for line numbers
-;; Face name is `helm-swoop-line-number-face`
-;; (setq helm-swoop-use-line-number-face t)
-;; If this value is t, split window inside the current window
-(setq helm-swoop-split-with-multiple-windows t)
-;; Split direcion. 'split-window-vertically or 'split-window-horizontally
-(setq helm-swoop-split-direction 'split-window-vertically)
-;; If nil, you can slightly boost invoke speed in exchange for text color
-(setq helm-swoop-speed-or-color t)
-
-(require 'helm-ag)
-(require 'helm-rg)
+(use-package helm-projectile
+    :config
+    (helm-projectile-on)
+    ;; helm-projectile: fix a bug as explained in: https://github.com/bbatsov/projectile/issues/1302
+    (setq projectile-git-submodule-command nil))
 
 
-;; autolad octave mode for *.m-files
-       (autoload 'octave-mode "octave-mod" nil t)
-       (setq auto-mode-alist (cons '("\\.m$" . octave-mode) auto-mode-alist))
+(use-package helm-swoop
+    :bind
+    (("M-i" . helm-swoop)
+     ("M-I" . helm-swoop-back-to-last-point)
+     ("C-c M-i" . helm-multi-swoop)
+     ("C-x M-i" . helm-multi-swoop-all)
+     :map isearch-mode-map 
+     ;; When doing isearch, hand the word over to helm-swoop
+     ("M-i" . helm-swoop-from-isearch)
+     :map helm-swoop-map 
+     ;; From helm-swoop to helm-multi-swoop-all
+     ("M-i" . helm-multi-swoop-all-from-helm-swoop)
+     ;; Move up and down like isearch
+     ("C-r" . helm-previous-line)
+     ("C-s" . helm-next-line)
+     :map helm-multi-swoop-map
+     ;; Move up and down like isearch
+     ("C-r" . helm-previous-line)
+     ("C-s" . helm-next-line))
+    :config
+    ;; If you prefer fuzzy matching
+    (setq helm-swoop-use-fuzzy-match t)
+    ;; Optional face for line numbers
+    ;; Face name is `helm-swoop-line-number-face`
+    ;; (setq helm-swoop-use-line-number-face t)
+    ;; If this value is t, split window inside the current window
+    (setq helm-swoop-split-with-multiple-windows t)
+    ;; Split direcion. 'split-window-vertically or 'split-window-horizontally
+    (setq helm-swoop-split-direction 'split-window-vertically)
+    ;; If nil, you can slightly boost invoke speed in exchange for text color
+    (setq helm-swoop-speed-or-color t))
 
-(require 'vlf-setup)
+(use-package helm-ag)
 
-(require 'web-beautify)
-(eval-after-load 'js2-mode
-  '(define-key js2-mode-map (kbd "C-c b") 'web-beautify-js))
-;; Or if you're using 'js-mode' (a.k.a 'javascript-mode')
-(eval-after-load 'js
-  '(define-key js-mode-map (kbd "C-c b") 'web-beautify-js))
+(use-package helm-rg)
 
-(eval-after-load 'json-mode
-  '(define-key json-mode-map (kbd "C-c b") 'web-beautify-js))
+;; Enable scala-mode for highlighting, indentation and motion commands
+(use-package scala-mode
+  :interpreter
+    ("scala" . scala-mode))
 
-(eval-after-load 'sgml-mode
-  '(define-key html-mode-map (kbd "C-c b") 'web-beautify-html))
+;; Enable sbt mode for executing sbt commands
+(use-package sbt-mode
+  :commands sbt-start sbt-command
+  :config
+  ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
+  ;; allows using SPACE when in the minibuffer
+  (substitute-key-definition
+   'minibuffer-complete-word
+   'self-insert-command
+   minibuffer-local-completion-map)
+   ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
+  (setq sbt:program-options '("-Dsbt.supershell=false")))
 
-(eval-after-load 'web-mode
-  '(define-key web-mode-map (kbd "C-c b") 'web-beautify-html))
+(use-package lsp-mode
+  ;; Optional - enable lsp-mode automatically in scala files
+  :hook  (scala-mode . lsp)
+         (lsp-mode . lsp-lens-mode)
+  :config (setq lsp-prefer-flymake nil))
 
-(eval-after-load 'css-mode
-  '(define-key css-mode-map (kbd "C-c b") 'web-beautify-css))
+;; Add metals backend for lsp-mode
+(use-package lsp-metals
+  :config (setq lsp-metals-treeview-show-when-views-received t))
 
+;; Enable nice rendering of documentation on hover
+(use-package lsp-ui)
+
+;; Use the Debug Adapter Protocol for running tests and debugging
+(use-package posframe
+  ;; Posframe is a pop-up tool that must be manually installed for dap-mode
+  )
+
+(use-package dap-mode
+  :hook
+  (lsp-mode . dap-mode)
+  (lsp-mode . dap-ui-mode)
+  )
+
+;;;;;;;;; End Metal Setup ;;;;;;;;;
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(nyan-mode t)
- '(nyan-wavy-trail t)
+ '(custom-safe-themes
+   '("e6df46d5085fde0ad56a46ef69ebb388193080cc9819e2d6024c9c6e27388ba9" default))
  '(package-selected-packages
-   '(magit yasnippet-snippets pip-requirements duplicate-thing org-superstar which-key helm-descbinds wgrep helm-rg helm-ag ag smart-jump nyan-mode dired-git-info diredfl docker-compose-mode dockerfile-mode matlab-mode projectile flycheck real-auto-save move-text engine-mode zenburn-theme smartparens python-mode markdown-mode js2-mode helm-swoop helm-projectile)))
+   '(dired-git-info dired-git-info-mode docker-compose-mode dockerfile-mode org-superstart helm-swoop helm-projectile projectile buffer-move nyan-mode which-key git-messenger multi-vterm vterm-toggle shell-pop vterm company-mode helm company move-text smartparens multiple-cursors expand-region vlf yasnippet-snippets magit real-auto-save use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
-(require 'expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
-
-(require 'multiple-cursors)
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-
-;; (require 'iy-go-to-char)
-;; (add-to-list 'mc/cursor-specific-vars 'iy-go-to-char-start-pos)
-;; (global-set-key (kbd "C-c f") 'iy-go-to-char)
-;; (global-set-key (kbd "C-c F") 'iy-go-to-char-backward)
-;; (global-set-key (kbd "C-c ;") 'iy-go-to-or-up-to-continue)
-;; (global-set-key (kbd "C-c ,") 'iy-go-to-or-up-to-continue-backward)
-
-(require 'engine-mode)
-(engine-mode t)
-(defengine amazon
-  "http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=%s")
-
-(defengine duckduckgo
-  "https://duckduckgo.com/?q=%s"
-  :keybinding "d")
-
-(defengine github
-  "https://github.com/search?ref=simplesearch&q=%s")
-
-(defengine google
-  "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
-  :keybinding "g")
-
-(defengine google-images
-  "http://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s")
-
-(defengine google-maps
-  "http://maps.google.com/maps?q=%s"
-  :docstring "Mappin' it up.")
-
-(defengine project-gutenberg
-  "http://www.gutenberg.org/ebooks/search/?query=%s")
-
-(defengine rfcs
-  "http://pretty-rfc.herokuapp.com/search?q=%s")
-
-(defengine stack-overflow
-  "https://stackoverflow.com/search?q=%s")
-
-(defengine twitter
-  "https://twitter.com/search?q=%s")
-
-(defengine wikipedia
-  "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
-  :keybinding "w"
-  :docstring "Searchin' the wikis.")
-
-(defengine wiktionary
-  "https://www.wikipedia.org/search-redirect.php?family=wiktionary&language=en&go=Go&search=%s")
-
-(defengine wolfram-alpha
-  "http://www.wolframalpha.com/input/?i=%s")
-
-(defengine youtube
-  "http://www.youtube.com/results?aq=f&oq=&search_query=%s")
-
-;; smartparens
-(require 'smartparens-config)
-(smartparens-global-mode t)
-
-;; keybinds used by Smartparens' author
-(define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
-(define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
-
-(define-key smartparens-mode-map (kbd "C-M-d") 'sp-down-sexp)
-(define-key smartparens-mode-map (kbd "C-M-a") 'sp-backward-down-sexp)
-(define-key smartparens-mode-map (kbd "C-S-d") 'sp-beginning-of-sexp)
-(define-key smartparens-mode-map (kbd "C-S-a") 'sp-end-of-sexp)
-
-(define-key smartparens-mode-map (kbd "C-M-e") 'sp-up-sexp)
-(define-key smartparens-mode-map (kbd "C-M-u") 'sp-backward-up-sexp)
-(define-key smartparens-mode-map (kbd "C-M-t") 'sp-transpose-sexp)
-
-(define-key smartparens-mode-map (kbd "C-M-n") 'sp-forward-hybrid-sexp)
-(define-key smartparens-mode-map (kbd "C-M-p") 'sp-backward-hybrid-sexp)
-
-(define-key smartparens-mode-map (kbd "C-M-k") 'sp-kill-sexp)
-(define-key smartparens-mode-map (kbd "C-M-w") 'sp-copy-sexp)
-
-(define-key smartparens-mode-map (kbd "C-M-<delete>") 'sp-unwrap-sexp)
-(define-key smartparens-mode-map (kbd "C-M-<backspace>") 'sp-backward-unwrap-sexp)
-
-
-;; (eval-after-load 'smartparens-mode
-;;   '(progn 
-;;      (define-key smartparens-mode-map (kbd "C-M-k") 'sp-kill-sexp)
-;;      (define-key smartparens-mode-map (kbd "C-M-a") 'sp-beginning-of-sexp)
-;;      (define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
-;;      (define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
-;;      (define-key smartparens-mode-map (kbd "C-M-n") 'sp-next-sexp)
-;;      (define-key smartparens-mode-map (kbd "C-M-p") 'sp-previous-sexp)
-;;      (define-key smartparens-mode-map (kbd "M-[") 'sp-unwrap-sexp)
-;;      (define-key smartparens-mode-map (kbd "C-M-w") 'sp-copy-sexp)))
-
-;; move-text mode
-(move-text-default-bindings)
-
-;; dockerfile-mode
-(require 'dockerfile-mode)
-(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
-
-;; docker-compose-mode
-(require 'docker-compose-mode)
-
-;; diredfl
-(require 'diredfl)
-(diredfl-global-mode)
-
-;; dired-git-info-mode
-(with-eval-after-load 'dired
-  (define-key dired-mode-map ")" 'dired-git-info-mode))
-;;; enable autmomatically in every Dired buffer
-;; (add-hook 'dired-after-readin-hook 'dired-git-info-auto-enable)
-
-
-;; dumb-jump 
-(setq dumb-jump-prefer-searcher 'rg)
-(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
-(eval-after-load 'dumb-jump-mode
-  '(progn 
-     (define-key dumb-jump-mode-map (kbd "M-g o") 'dumb-jump-go-other-window)
-     (define-key dumb-jump-mode-map (kbd "M-g j") 'dumb-jump-go)
-     (define-key dumb-jump-mode-map (kbd "M-g q") 'dumb-jump-quick-look)
-     (setq dumb-jump-selector 'helm)
-     (setq dumb-jump-prefer-searcher 'ag)))
-
-
-;; smart-jump (disable because it changes the keybind M-P)
-;; (require 'smart-jump)
-;; (smart-jump-setup-default-registers)
-
-;; I am going to use rp for searching but I need to investigate which mode 
-;; is the best at the moment.
-;; This article discuss the searching problem very well:
-;; https://with-emacs.com/posts/tutorials/search-and-replacement-techniques/
-;; and this is a good thread to have an impression of what people are doing:
-;; https://www.reddit.com/r/emacs/comments/dgglux/search_and_replace_options/
-;; Options for rg are: deadgrep, helm-grep, helm-rg, rg.el
-
-;; nyan-mode
-(require 'nyan-mode)
-(setq nyan-bar-length 15)
-
-;; which-key
-(require 'which-key)
-(which-key-mode)
-(setq which-key-idle-delay 0.3)
-(which-key-setup-minibuffer)
-;;; .emacs ends here
-
-;; org-superstar
-(require 'org-superstar)
-(add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
-
-;; duplicate-thing
-(require 'duplicate-thing)
-(global-set-key (kbd "M-c") 'duplicate-thing)
-
-(require 'pip-requirements)
-
-
