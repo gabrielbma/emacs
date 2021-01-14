@@ -205,8 +205,6 @@
     (move-text-default-bindings))
 
 (use-package smartparens
-    :config
-    (smartparens-global-mode t)
     :bind (:map smartparens-mode-map
                 ("C-M-f" . sp-forward-sexp)
                 ("C-M-b" . sp-backward-sexp)
@@ -223,6 +221,8 @@
                 ("C-M-w" . sp-copy-sexp)
                 ( "C-M-<delete>" . sp-unwrap-sexp)
                 ("C-M-<backspace>" . sp-backward-unwrap-sexp)))
+    :config
+    (smartparens-global-mode t)
 
 (use-package org-superstar
     :hook (org-mode . (lambda ()
@@ -266,8 +266,8 @@
                 ("s-p" . projectile-command-map)
                 ("C-c p" . projectile-command-map))
     :config
-        ((add-to-list 'projectile-other-file-alist '("html" "js"))
-        (add-to-list 'projectile-other-file-alist '("js" "html"))))
+        (add-to-list 'projectile-other-file-alist '("html" "js"))
+        (add-to-list 'projectile-other-file-alist '("js" "html")))
 
 
 ;; begin company-mode setup ;;;
@@ -434,8 +434,7 @@
 (use-package dap-mode
   :hook
   (lsp-mode . dap-mode)
-  (lsp-mode . dap-ui-mode)
-  )
+  (lsp-mode . dap-ui-mode))
 
 ;;;;;;;;; End Metal Setup ;;;;;;;;;
 
