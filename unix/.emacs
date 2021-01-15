@@ -163,8 +163,9 @@
   :config (global-flycheck-mode))
 
 (use-package yasnippet
+    :demand t
     :config
-    (add-to-list 'yas-snippet-dirs '"/Users/gabrielbma/Projects/yasnippet-snippets")
+    (add-to-list 'yas-snippet-dirs (getenv "YASNIPPET_SNIPPETS_REPO"))
     (yas-global-mode 1))
 
 (use-package yasnippet-snippets)
