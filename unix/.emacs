@@ -155,6 +155,9 @@
   :config
   (nyan-mode 1))
 
+(use-package flyspell
+  :init (flyspell-mode +1))
+
 (use-package flycheck
   :init (global-flycheck-mode)
   :config (global-flycheck-mode))
@@ -205,24 +208,27 @@
     (move-text-default-bindings))
 
 (use-package smartparens
+    :demand t
     :bind (:map smartparens-mode-map
                 ("C-M-f" . sp-forward-sexp)
                 ("C-M-b" . sp-backward-sexp)
-                ( "C-M-d" . sp-down-sexp)
+                ("C-M-d" . sp-down-sexp)
                 ("C-M-a" . sp-backward-down-sexp)
                 ("C-S-d" . sp-beginning-of-sexp)
                 ("C-S-a" . sp-end-of-sexp)
-                ( "C-M-e" . sp-up-sexp)
+                ("C-M-e" . sp-up-sexp)
                 ("C-M-u" . sp-backward-up-sexp)
                 ("C-M-t" . sp-transpose-sexp)
-                ( "C-M-n" . sp-forward-hybrid-sexp)
+                ("C-M-n" . sp-forward-hybrid-sexp)
                 ("C-M-p" . sp-backward-hybrid-sexp)
-                ( "C-M-k" . sp-kill-sexp)
+                ("C-M-k" . sp-kill-sexp)
                 ("C-M-w" . sp-copy-sexp)
-                ( "C-M-<delete>" . sp-unwrap-sexp)
-                ("C-M-<backspace>" . sp-backward-unwrap-sexp)))
+                ("C-M-<delete>" . sp-unwrap-sexp)
+                ("C-M-<backspace>" . sp-backward-unwrap-sexp))
     :config
-    (smartparens-global-mode t)
+    (require 'smartparens-config)
+    (smartparens-global-mode t))
+
 
 (use-package org-superstar
     :hook (org-mode . (lambda ()
@@ -244,20 +250,21 @@
     (diredfl-global-mode))
 
 (use-package dired-git-info
-:bind (:map dired-mode-map (")" . dired-git-info-mode)))
+    :after dired
+    :bind (:map dired-mode-map (")" . dired-git-info-mode)))
 
 (use-package shell-pop
-  :init
-  (setq shell-pop-full-span t)
-  :bind (("C-c s" . shell-pop)))
+    :init
+    (setq shell-pop-full-span t)
+    :bind (("C-c s" . shell-pop)))
 
 (use-package vterm
     :ensure t)
 
 (use-package vterm-toggle
-  :bind (("H-z" . vterm-toggle)
-         ("H-F" . vterm-toggle-forward)
-         ("H-B" . vterm-toggle-backward)))
+    :bind (("H-z" . vterm-toggle)
+           ("H-F" . vterm-toggle-forward)
+           ("H-B" . vterm-toggle-backward)))
 
 (use-package multi-vterm :ensure t)
 
@@ -326,6 +333,10 @@
     (setq company-dabbrev-code-everywhere t)
     (setq company-dabbrev-code-ignore-case t)
     (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+    (setq company-tooltip-align-annotations t
+          company-tooltip-flip-when-above t
+          ;; Easy navigation to candidates with M-<n>
+          company-show-numbers t)
     :hook
     (after-init . global-company-mode))
 
@@ -446,7 +457,7 @@
  '(custom-safe-themes
    '("e6df46d5085fde0ad56a46ef69ebb388193080cc9819e2d6024c9c6e27388ba9" default))
  '(package-selected-packages
-   '(dired-git-info dired-git-info-mode docker-compose-mode dockerfile-mode org-superstart helm-swoop helm-projectile projectile buffer-move nyan-mode which-key git-messenger multi-vterm vterm-toggle shell-pop vterm company-mode helm company move-text smartparens multiple-cursors expand-region vlf yasnippet-snippets magit real-auto-save use-package)))
+   '(dired dired-git-info dired-git-info-mode docker-compose-mode dockerfile-mode org-superstart helm-swoop helm-projectile projectile buffer-move nyan-mode which-key git-messenger multi-vterm vterm-toggle shell-pop vterm company-mode helm company move-text smartparens multiple-cursors expand-region vlf yasnippet-snippets magit real-auto-save use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
