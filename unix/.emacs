@@ -274,6 +274,7 @@
                 ("s-p" . projectile-command-map)
                 ("C-c p" . projectile-command-map))
     :config
+        (projectile-mode +1)
         (add-to-list 'projectile-other-file-alist '("html" "js"))
         (add-to-list 'projectile-other-file-alist '("js" "html")))
 
@@ -365,6 +366,7 @@
     ("M-y" . helm-show-kill-ring)))
 
 (use-package helm-projectile
+    :demand t
     :config
     (helm-projectile-on)
     ;; helm-projectile: fix a bug as explained in: https://github.com/bbatsov/projectile/issues/1302
@@ -392,7 +394,7 @@
      ("C-s" . helm-next-line))
     :config
     ;; If you prefer fuzzy matching
-    (setq helm-swoop-use-fuzzy-match t)
+    ;; (setq helm-swoop-use-fuzzy-match t)
     ;; Optional face for line numbers
     ;; Face name is `helm-swoop-line-number-face`
     ;; (setq helm-swoop-use-line-number-face t)
@@ -444,11 +446,16 @@
   )
 
 (use-package dap-mode
-  :hook
-  (lsp-mode . dap-mode)
-  (lsp-mode . dap-ui-mode))
+    :hook
+    (lsp-mode . dap-mode)
+    (lsp-mode . dap-ui-mode))
 
-;;;;;;;;; End Metal Setup ;;;;;;;;;
+
+(use-package js2-mode 
+    :mode
+    (("\\.js\\'" . js2-mode)
+     ("\\.avsc\\'" . js2-mode)))
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -458,7 +465,7 @@
  '(custom-safe-themes
    '("e6df46d5085fde0ad56a46ef69ebb388193080cc9819e2d6024c9c6e27388ba9" default))
  '(package-selected-packages
-   '(dired dired-git-info dired-git-info-mode docker-compose-mode dockerfile-mode org-superstart helm-swoop helm-projectile projectile buffer-move nyan-mode which-key git-messenger multi-vterm vterm-toggle shell-pop vterm company-mode helm company move-text smartparens multiple-cursors expand-region vlf yasnippet-snippets magit real-auto-save use-package)))
+   '(js2-mode dired dired-git-info dired-git-info-mode docker-compose-mode dockerfile-mode org-superstart helm-swoop helm-projectile projectile buffer-move nyan-mode which-key git-messenger multi-vterm vterm-toggle shell-pop vterm company-mode helm company move-text smartparens multiple-cursors expand-region vlf yasnippet-snippets magit real-auto-save use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
