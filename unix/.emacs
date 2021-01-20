@@ -268,8 +268,15 @@
     :bind (("C-c s" . shell-pop)))
 
 (use-package vterm
+    :bind (:map vterm-mode-map
+                ("M-P" . 'windmove-up)
+                ("M-N" . 'windmove-down)
+                ("M-F" . 'windmove-right)
+                ("M-B" . 'windmove-left))
     :ensure t)
 
+;; Evaluation whether the keybind set up to vterm is working or not.
+;; In case that keybinding works well then this mode can be removed.
 (use-package vterm-toggle
     :bind (("H-z" . vterm-toggle)
            ("H-F" . vterm-toggle-forward)
