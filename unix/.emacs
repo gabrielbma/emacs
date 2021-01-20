@@ -250,6 +250,14 @@
     :config
     (diredfl-global-mode))
 
+(use-package peep-dired
+  :ensure t
+  :defer t ; don't access `dired-mode-map' until `peep-dired' is loaded
+  :bind (:map dired-mode-map
+              ("P" . peep-dired))
+  :config
+  (setq peep-dired-cleanup-on-disable t))
+
 (use-package dired-git-info
     :after dired
     :bind (:map dired-mode-map (")" . dired-git-info-mode)))
@@ -456,6 +464,9 @@
     (("\\.js\\'" . js2-mode)
      ("\\.avsc\\'" . js2-mode)))
 
+(use-package groovy-mode
+    :mode
+    (("\\.gradle\\'" . groovy-mode)))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -465,7 +476,7 @@
  '(custom-safe-themes
    '("e6df46d5085fde0ad56a46ef69ebb388193080cc9819e2d6024c9c6e27388ba9" default))
  '(package-selected-packages
-   '(js2-mode dired dired-git-info dired-git-info-mode docker-compose-mode dockerfile-mode org-superstart helm-swoop helm-projectile projectile buffer-move nyan-mode which-key git-messenger multi-vterm vterm-toggle shell-pop vterm company-mode helm company move-text smartparens multiple-cursors expand-region vlf yasnippet-snippets magit real-auto-save use-package)))
+   '(peep-dired groovy-mode js2-mode dired dired-git-info dired-git-info-mode docker-compose-mode dockerfile-mode org-superstart helm-swoop helm-projectile projectile buffer-move nyan-mode which-key git-messenger multi-vterm vterm-toggle shell-pop vterm company-mode helm company move-text smartparens multiple-cursors expand-region vlf yasnippet-snippets magit real-auto-save use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
