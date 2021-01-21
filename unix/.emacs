@@ -246,6 +246,14 @@
 
 (use-package docker-compose-mode)
 
+(use-package symbol-overlay
+    :bind
+    (("C-h" . symbol-overlay-put)
+    ("M-n" . symbol-overlay-switch-forward)
+    ("M-p" . symbol-overlay-switch-backward)
+    ("<f7>" . symbol-overlay-mode)
+    ("<f8>" . symbol-overlay-remove-all)))
+
 (use-package dired-filter)
 
 (use-package dired-narrow
@@ -516,6 +524,13 @@
     :mode
     (("\\.gradle\\'" . groovy-mode)))
 
+;;; Airties custom scripts
+(defun send-to-vterm (beg end)
+  (interactive "r")
+  (process-send-region "vterm" beg end))
+
+(global-set-key (kbd "C-c C-v") 'send-to-vterm)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -524,7 +539,7 @@
  '(custom-safe-themes
    '("e6df46d5085fde0ad56a46ef69ebb388193080cc9819e2d6024c9c6e27388ba9" default))
  '(package-selected-packages
-   '(dired-rainbow dired-collapse dired-narrow dired-filter peep-dired groovy-mode js2-mode dired dired-git-info dired-git-info-mode docker-compose-mode dockerfile-mode org-superstart helm-swoop helm-projectile projectile buffer-move nyan-mode which-key git-messenger multi-vterm vterm-toggle shell-pop vterm company-mode helm company move-text smartparens multiple-cursors expand-region vlf yasnippet-snippets magit real-auto-save use-package)))
+   '(symbol-overlay dired-rainbow dired-collapse dired-narrow dired-filter peep-dired groovy-mode js2-mode dired dired-git-info dired-git-info-mode docker-compose-mode dockerfile-mode org-superstart helm-swoop helm-projectile projectile buffer-move nyan-mode which-key git-messenger multi-vterm vterm-toggle shell-pop vterm company-mode helm company move-text smartparens multiple-cursors expand-region vlf yasnippet-snippets magit real-auto-save use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
