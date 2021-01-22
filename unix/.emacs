@@ -248,7 +248,7 @@
 
 (use-package symbol-overlay
     :bind
-    (("C-h" . symbol-overlay-put)
+    (("C-c h" . symbol-overlay-put)
     ("M-n" . symbol-overlay-switch-forward)
     ("M-p" . symbol-overlay-switch-backward)
     ("<f7>" . symbol-overlay-mode)
