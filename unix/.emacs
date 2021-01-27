@@ -105,6 +105,12 @@
                   (interactive)
                   (join-line -1)))
 
+
+;; Set up Tramp to use SSH
+(custom-set-variables
+ '(tramp-default-method "ssh")
+ '(tramp-default-user "gabriel.armelin"))
+;; (setq tramp-default-method "ssh")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'package)
@@ -491,23 +497,24 @@
    ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
   (setq sbt:program-options '("-Dsbt.supershell=false")))
 
-(use-package lsp-mode
-  ;; Optional - enable lsp-mode automatically in scala files
-  :hook  (scala-mode . lsp)
-         (lsp-mode . lsp-lens-mode)
-  :config (setq lsp-prefer-flymake nil))
+;; temporarily disabled until I take a look at lsp server and lsp-mode.
+;; (use-package lsp-mode
+;;   ;; Optional - enable lsp-mode automatically in scala files
+;;   :hook  (scala-mode . lsp)
+;;          (lsp-mode . lsp-lens-mode)
+;;   :config (setq lsp-prefer-flymake nil))
 
-;; Add metals backend for lsp-mode
-(use-package lsp-metals
-  :config (setq lsp-metals-treeview-show-when-views-received t))
+;; ;; Add metals backend for lsp-mode
+;; (use-package lsp-metals
+;;   :config (setq lsp-metals-treeview-show-when-views-received t))
 
-;; Enable nice rendering of documentation on hover
-(use-package lsp-ui)
+;; ;; Enable nice rendering of documentation on hover
+;; (use-package lsp-ui)
 
-;; Use the Debug Adapter Protocol for running tests and debugging
-(use-package posframe
-  ;; Posframe is a pop-up tool that must be manually installed for dap-mode
-  )
+;; ;; Use the Debug Adapter Protocol for running tests and debugging
+;; (use-package posframe
+;;   ;; Posframe is a pop-up tool that must be manually installed for dap-mode
+;;   )
 
 (use-package dap-mode
     :hook
