@@ -525,7 +525,9 @@
 ;; Enable scala-mode for highlighting, indentation and motion commands
 (use-package scala-mode
   :interpreter
-    ("scala" . scala-mode))
+    ("scala" . scala-mode)
+    :mode
+    (("\\.sc\\'" . scala-mode)))
 
 ;; Enable sbt mode for executing sbt commands
 (use-package sbt-mode
