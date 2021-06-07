@@ -112,7 +112,11 @@
 (auto-save-visited-mode 1)
 (setq auto-save-interval 10
       auto-save-timeout 10)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; C-u C-SPC to jump to last mark and to pop the mark repeatedly you can press C-u C-SPC C-SPC C-SPC ...
+(setq set-mark-command-repeat-pop t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (require 'package)
 
