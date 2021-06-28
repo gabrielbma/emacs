@@ -554,31 +554,6 @@
    ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
   (setq sbt:program-options '("-Dsbt.supershell=false")))
 
-;; temporarily disabled until I take a look at lsp server and lsp-mode.
-;; (use-package lsp-mode
-;;   ;; Optional - enable lsp-mode automatically in scala files
-;;   :hook  (scala-mode . lsp)
-;;          (lsp-mode . lsp-lens-mode)
-;;   :config (setq lsp-prefer-flymake nil))
-
-;; ;; Add metals backend for lsp-mode
-;; (use-package lsp-metals
-;;   :config (setq lsp-metals-treeview-show-when-views-received t))
-
-;; ;; Enable nice rendering of documentation on hover
-;; (use-package lsp-ui)
-
-;; ;; Use the Debug Adapter Protocol for running tests and debugging
-;; (use-package posframe
-;;   ;; Posframe is a pop-up tool that must be manually installed for dap-mode
-;;   )
-
-(use-package dap-mode
-    :hook
-    (lsp-mode . dap-mode)
-    (lsp-mode . dap-ui-mode))
-
-
 (use-package js2-mode 
     :mode
     (("\\.js\\'" . js2-mode)
@@ -587,6 +562,43 @@
 (use-package groovy-mode
     :mode
     (("\\.gradle\\'" . groovy-mode)))
+
+(use-package dap-mode
+    :hook
+    (lsp-mode . dap-mode)
+    (lsp-mode . dap-ui-mode))
+
+;; Use the Debug Adapter Protocol for running tests and debugging
+(use-package posframe
+  ;; Posframe is a pop-up tool that must be manually installed for dap-mode
+  )
+
+(use-package lsp-python-ms
+  :ensure t
+  :init (setq lsp-python-ms-auto-install-server t)
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-python-ms)
+                          (lsp))))  ; or lsp-deferred
+
+;; (use-package lsp-mode
+;;   ;; Enable lsp-mode automatically for language files
+;;   :hook  (scala-mode . lsp)
+;;          (lsp-mode . lsp-lens-mode)
+;;          (python-mode . lsp)
+;;   :config (setq lsp-prefer-flymake nil))
+
+;; ;; Add metals backend for lsp-mode
+;; (use-package lsp-metals
+;;   :config (setq lsp-metals-treeview-show-when-views-received t))
+
+;; Enable nice rendering of documentation on hover
+(use-package lsp-ui)
+
+
+
+
+
+
 
 ;;; Airties custom scripts
 (defun send-to-vterm (beg end)
@@ -603,7 +615,7 @@
  '(custom-safe-themes
    '("e6df46d5085fde0ad56a46ef69ebb388193080cc9819e2d6024c9c6e27388ba9" default))
  '(package-selected-packages
-   '(magit-gerrit ag auto-save-visited auto-save-visited-mode symbol-overlay dired-rainbow dired-collapse dired-narrow dired-filter peep-dired groovy-mode js2-mode dired dired-git-info dired-git-info-mode docker-compose-mode dockerfile-mode org-superstart helm-swoop helm-projectile projectile buffer-move nyan-mode which-key git-messenger multi-vterm vterm-toggle shell-pop vterm company-mode helm company move-text smartparens multiple-cursors expand-region vlf yasnippet-snippets magit real-auto-save use-package))
+   '(lsp-python-ms python-mode magit-gerrit ag auto-save-visited auto-save-visited-mode symbol-overlay dired-rainbow dired-collapse dired-narrow dired-filter peep-dired groovy-mode js2-mode dired dired-git-info dired-git-info-mode docker-compose-mode dockerfile-mode org-superstart helm-swoop helm-projectile projectile buffer-move nyan-mode which-key git-messenger multi-vterm vterm-toggle shell-pop vterm company-mode helm company move-text smartparens multiple-cursors expand-region vlf yasnippet-snippets magit real-auto-save use-package))
  '(tramp-default-method "ssh")
  '(tramp-default-user "gabriel.armelin"))
 (custom-set-faces
