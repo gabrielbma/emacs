@@ -475,6 +475,7 @@
 ;;end company-mode setup
 
 (use-package helm
+    :demand t
     :config
     (helm-autoresize-mode 1)
     (setq helm-M-x-fuzzy-match t)
@@ -499,11 +500,13 @@
 
 
 (use-package helm-swoop
+    :after (helm)
+    :ensure t
     :bind
-    (("M-i" . helm-swoop)
+    (("C-s" . helm-swoop)
      ("M-I" . helm-swoop-back-to-last-point)
-     ("C-c M-i" . helm-multi-swoop)
-     ("C-x M-i" . helm-multi-swoop-all)
+     ("C-c C-s" . helm-multi-swoop)
+     ;; ("C-x C-s" . helm-multi-swoop-all)
      :map isearch-mode-map 
      ;; When doing isearch, hand the word over to helm-swoop
      ("M-i" . helm-swoop-from-isearch)
@@ -511,12 +514,12 @@
      ;; From helm-swoop to helm-multi-swoop-all
      ("M-i" . helm-multi-swoop-all-from-helm-swoop)
      ;; Move up and down like isearch
-     ("C-r" . helm-previous-line)
-     ("C-s" . helm-next-line)
+     ("C-p" . helm-previous-line)
+     ("C-n" . helm-next-line)
      :map helm-multi-swoop-map
      ;; Move up and down like isearch
-     ("C-r" . helm-previous-line)
-     ("C-s" . helm-next-line))
+     ("C-p" . helm-previous-line)
+     ("C-n" . helm-next-line))
     :config
     ;; If you prefer fuzzy matching
     ;; (setq helm-swoop-use-fuzzy-match t)
@@ -565,8 +568,11 @@
 
 (use-package dap-mode
     :hook
-    (lsp-mode . dap-mode)
-    (lsp-mode . dap-ui-mode))
+    ((lsp-mode . dap-mode)
+    (lsp-mode . dap-ui-mode)
+    (clojure-mode . lsp)
+    (clojurec-mode . lsp)
+    (clojurescript-mode . lsp)))
 
 ;; Use the Debug Adapter Protocol for running tests and debugging
 (use-package posframe
