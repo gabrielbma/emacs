@@ -562,6 +562,9 @@
     (("\\.js\\'" . js2-mode)
      ("\\.avsc\\'" . js2-mode)))
 
+(use-package cider
+  :ensure t)
+
 (use-package groovy-mode
     :mode
     (("\\.gradle\\'" . groovy-mode)))
@@ -621,7 +624,7 @@
  '(custom-safe-themes
    '("e6df46d5085fde0ad56a46ef69ebb388193080cc9819e2d6024c9c6e27388ba9" default))
  '(package-selected-packages
-   '(lsp-python-ms python-mode magit-gerrit ag auto-save-visited auto-save-visited-mode symbol-overlay dired-rainbow dired-collapse dired-narrow dired-filter peep-dired groovy-mode js2-mode dired dired-git-info dired-git-info-mode docker-compose-mode dockerfile-mode org-superstart helm-swoop helm-projectile projectile buffer-move nyan-mode which-key git-messenger multi-vterm vterm-toggle shell-pop vterm company-mode helm company move-text smartparens multiple-cursors expand-region vlf yasnippet-snippets magit real-auto-save use-package))
+   '(cider lsp-python-ms python-mode magit-gerrit ag auto-save-visited auto-save-visited-mode symbol-overlay dired-rainbow dired-collapse dired-narrow dired-filter peep-dired groovy-mode js2-mode dired dired-git-info dired-git-info-mode docker-compose-mode dockerfile-mode org-superstart helm-swoop helm-projectile projectile buffer-move nyan-mode which-key git-messenger multi-vterm vterm-toggle shell-pop vterm company-mode helm company move-text smartparens multiple-cursors expand-region vlf yasnippet-snippets magit real-auto-save use-package))
  '(tramp-default-method "ssh")
  '(tramp-default-user "gabriel.armelin"))
 (custom-set-faces
