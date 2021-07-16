@@ -503,12 +503,6 @@
     :after (helm)
     :ensure t
     :bind
-    (("M-i" . helm-swoop)
-     ("M-I" . helm-swoop-back-to-last-point)
-     ("C-c M-i" . helm-multi-swoop)
-     ;; ("C-x C-s" . helm-multi-swoop-all)
-     :map isearch-mode-map 
-    :bind
     (("C-i" . helm-swoop)
      ("M-I" . helm-swoop-back-to-last-point)
      ("C-c C-s" . helm-multi-swoop)
