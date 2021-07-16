@@ -503,7 +503,13 @@
     :after (helm)
     :ensure t
     :bind
-    (("C-s" . helm-swoop)
+    (("M-i" . helm-swoop)
+     ("M-I" . helm-swoop-back-to-last-point)
+     ("C-c M-i" . helm-multi-swoop)
+     ;; ("C-x C-s" . helm-multi-swoop-all)
+     :map isearch-mode-map 
+    :bind
+    (("C-i" . helm-swoop)
      ("M-I" . helm-swoop-back-to-last-point)
      ("C-c C-s" . helm-multi-swoop)
      ;; ("C-x C-s" . helm-multi-swoop-all)
@@ -582,12 +588,22 @@
   ;; Posframe is a pop-up tool that must be manually installed for dap-mode
   )
 
-(use-package lsp-python-ms
+(use-package elpy
   :ensure t
-  :init (setq lsp-python-ms-auto-install-server t)
-  :hook (python-mode . (lambda ()
-                          (require 'lsp-python-ms)
-                          (lsp))))  ; or lsp-deferred
+  :init
+  (elpy-enable))
+
+(use-package ein
+    :ensure t
+    :init
+        (setq ein:output-area-inlined-images t))
+
+;; (use-package lsp-python-ms
+;;   :ensure t
+;;   :init (setq lsp-python-ms-auto-install-server t)
+;;   :hook (python-mode . (lambda ()
+;;                           (require 'lsp-python-ms)
+;;                           (lsp))))  ; or lsp-deferred
 
 ;; (use-package lsp-mode
 ;;   ;; Enable lsp-mode automatically for language files
@@ -624,7 +640,7 @@
  '(custom-safe-themes
    '("e6df46d5085fde0ad56a46ef69ebb388193080cc9819e2d6024c9c6e27388ba9" default))
  '(package-selected-packages
-   '(cider lsp-python-ms python-mode magit-gerrit ag auto-save-visited auto-save-visited-mode symbol-overlay dired-rainbow dired-collapse dired-narrow dired-filter peep-dired groovy-mode js2-mode dired dired-git-info dired-git-info-mode docker-compose-mode dockerfile-mode org-superstart helm-swoop helm-projectile projectile buffer-move nyan-mode which-key git-messenger multi-vterm vterm-toggle shell-pop vterm company-mode helm company move-text smartparens multiple-cursors expand-region vlf yasnippet-snippets magit real-auto-save use-package))
+   '(ein elpy cider lsp-python-ms python-mode magit-gerrit ag auto-save-visited auto-save-visited-mode symbol-overlay dired-rainbow dired-collapse dired-narrow dired-filter peep-dired groovy-mode js2-mode dired dired-git-info dired-git-info-mode docker-compose-mode dockerfile-mode org-superstart helm-swoop helm-projectile projectile buffer-move nyan-mode which-key git-messenger multi-vterm vterm-toggle shell-pop vterm company-mode helm company move-text smartparens multiple-cursors expand-region vlf yasnippet-snippets magit real-auto-save use-package))
  '(tramp-default-method "ssh")
  '(tramp-default-user "gabriel.armelin"))
 (custom-set-faces
