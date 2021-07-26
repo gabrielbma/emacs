@@ -392,15 +392,12 @@
 (use-package multi-vterm :ensure t)
 
 (use-package projectile
-    :bind (:map projectile-mode-map
-                ("s-p" . projectile-command-map)
-                ("C-c p" . projectile-command-map))
-    :config
-        (projectile-global-mode)
-        ;;(projectile-mode +1)
-        (add-to-list 'projectile-other-file-alist '("html" "js"))
-        (add-to-list 'projectile-other-file-alist '("js" "html")))
-
+  :ensure t
+  :init
+  (projectile-mode +1)
+  :bind (:map projectile-mode-map
+              ("s-p" . projectile-command-map)
+              ("C-c p" . projectile-command-map)))
 
 ;; begin company-mode setup ;;;
 
@@ -476,6 +473,7 @@
 
 (use-package helm
     :demand t
+    :ensure t
     :config
     (helm-autoresize-mode 1)
     (setq helm-M-x-fuzzy-match t)
@@ -491,6 +489,7 @@
 
 (use-package helm-projectile
     :after projectile
+    :ensure t
     :demand t
     :config
     (helm-projectile-on)
