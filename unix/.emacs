@@ -127,8 +127,8 @@
 
 ;; Install use-package if not already installed
 (unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+    (package-refresh-contents)
+    (package-install 'use-package))
 
 (require 'use-package)
 
@@ -141,27 +141,27 @@
 
 ;; Set up Tramp to use SSH
 (use-package tramp
-  :defer 5
-  :config
-  (with-eval-after-load 'tramp-cache
-    (setq tramp-persistency-file-name "~/.emacs.d/tramp"))
-  (custom-set-variables
-   '(tramp-default-method "ssh")
-   '(tramp-default-user "gabriel.armelin"))
-  (setq tramp-default-method "ssh"
-        tramp-chunksize 500
-        tramp-terminal-type "tramp"
-        tramp-default-user-alist '(("\\`su\\(do\\)?\\'" nil "root"))
-        tramp-adb-program "adb"
-        ;; use the settings in ~/.ssh/config instead of Tramp's
-        tramp-use-ssh-controlmaster-options nil
-        ;; don't generate backups for remote files opened as root (security hazzard)
-        backup-enable-predicate
-        (lambda (name)
-          (and (normal-backup-enable-predicate name)
-               (not (let ((method (file-remote-p name 'method)))
-                      (when (stringp method)
-                        (member method '("su" "sudo")))))))))
+    :defer 5
+    :config
+    (with-eval-after-load 'tramp-cache
+        (setq tramp-persistency-file-name "~/.emacs.d/tramp"))
+    (custom-set-variables
+     '(tramp-default-method "ssh")
+     '(tramp-default-user "gabriel.armelin"))
+    (setq tramp-default-method "ssh"
+          tramp-chunksize 500
+          tramp-terminal-type "tramp"
+          tramp-default-user-alist '(("\\`su\\(do\\)?\\'" nil "root"))
+          tramp-adb-program "adb"
+          ;; use the settings in ~/.ssh/config instead of Tramp's
+          tramp-use-ssh-controlmaster-options nil
+          ;; don't generate backups for remote files opened as root (security hazzard)
+          backup-enable-predicate
+          (lambda (name)
+              (and (normal-backup-enable-predicate name)
+                   (not (let ((method (file-remote-p name 'method)))
+                            (when (stringp method)
+                                (member method '("su" "sudo")))))))))
 
 ;; (use-package tramp
 ;;     :config
@@ -176,19 +176,19 @@
 ;;     )
 
 (use-package zenburn-theme
-  :demand t
-  :config
-  (load-theme 'zenburn t))
+    :demand t
+    :config
+    (load-theme 'zenburn t))
 
 (use-package windswap
-  :demand
-  :bind
-  (("H-n" . windswap-down)
-   ("H-p" . windswap-up)
-   ("H-b" . windswap-left)
-   ("H-f" . windswap-right))
-  :config
-  (windswap-default-keybindings))
+    :demand
+    :bind
+    (("H-n" . windswap-down)
+     ("H-p" . windswap-up)
+     ("H-b" . windswap-left)
+     ("H-f" . windswap-right))
+    :config
+    (windswap-default-keybindings))
 
 (use-package which-key
   :config
@@ -541,9 +541,9 @@
     :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; temporarily disabled 
-;; (use-package aggressive-indent
-;;     :ensure t
-;;     :hook (clojure-mode . aggressive-indent-mode))
+(use-package aggressive-indent
+    :ensure t
+    :hook (emacs-lisp-mode . aggressive-indent-mode))
 
 (use-package indent-guide
     :ensure t
