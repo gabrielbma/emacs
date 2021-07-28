@@ -536,9 +536,24 @@
 
 (use-package helm-rg)
 
+(use-package rainbow-delimiters
+    :ensure t
+    :hook (prog-mode . rainbow-delimiters-mode))
+
+;; temporarily disabled 
+;; (use-package aggressive-indent
+;;     :ensure t
+;;     :hook (clojure-mode . aggressive-indent-mode))
+
+(use-package indent-guide
+    :ensure t
+    :init
+    (setq indent-guide-recursive t)
+    :hook (prog-mode . indent-guide-mode))
+
 ;; Enable scala-mode for highlighting, indentation and motion commands
 (use-package scala-mode
-  :interpreter
+    :interpreter
     ("scala" . scala-mode)
     :mode
     (("\\.sc\\'" . scala-mode)))
@@ -563,6 +578,7 @@
 
 (use-package cider
   :ensure t)
+
 
 (use-package groovy-mode
     :mode
@@ -636,7 +652,7 @@
  '(custom-safe-themes
    '("e6df46d5085fde0ad56a46ef69ebb388193080cc9819e2d6024c9c6e27388ba9" default))
  '(package-selected-packages
-   '(ein elpy cider lsp-python-ms python-mode magit-gerrit ag auto-save-visited auto-save-visited-mode symbol-overlay dired-rainbow dired-collapse dired-narrow dired-filter peep-dired groovy-mode js2-mode dired dired-git-info dired-git-info-mode docker-compose-mode dockerfile-mode org-superstart helm-swoop helm-projectile projectile buffer-move nyan-mode which-key git-messenger multi-vterm vterm-toggle shell-pop vterm company-mode helm company move-text smartparens multiple-cursors expand-region vlf yasnippet-snippets magit real-auto-save use-package))
+   '(indent-guide aggressive-indent rainbow-delimiters-mode rainbow-delimiters ein elpy cider lsp-python-ms python-mode magit-gerrit ag auto-save-visited auto-save-visited-mode symbol-overlay dired-rainbow dired-collapse dired-narrow dired-filter peep-dired groovy-mode js2-mode dired dired-git-info dired-git-info-mode docker-compose-mode dockerfile-mode org-superstart helm-swoop helm-projectile projectile buffer-move nyan-mode which-key git-messenger multi-vterm vterm-toggle shell-pop vterm company-mode helm company move-text smartparens multiple-cursors expand-region vlf yasnippet-snippets magit real-auto-save use-package))
  '(tramp-default-method "ssh")
  '(tramp-default-user "gabriel.armelin"))
 (custom-set-faces
