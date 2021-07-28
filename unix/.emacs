@@ -61,18 +61,18 @@
 ;; dired
 (setq dired-dwim-target t)
 (add-hook 'dired-mode-hook
-      (lambda ()
-        (dired-hide-details-mode)))
+          (lambda ()
+              (dired-hide-details-mode)))
 
 ;; show line show
 (defun goto-line-show ()
-  "Show line numbers temporarily, while prompting for the line number input."
-  (interactive)
-  (unwind-protect
-      (progn
-        (linum-mode 1)
-        (call-interactively #'goto-line))
-    (linum-mode -1)))
+    "Show line numbers temporarily, while prompting for the line number input."
+    (interactive)
+    (unwind-protect
+            (progn
+                (linum-mode 1)
+                (call-interactively #'goto-line))
+        (linum-mode -1)))
 (global-set-key (kbd "M-g M-g") 'goto-line-show)
 
 ;; Toggle comments for regions and lines
@@ -101,9 +101,9 @@
 
 ;; Collapse lines
 (global-set-key (kbd "M-j")
-            (lambda ()
-                  (interactive)
-                  (join-line -1)))
+                (lambda ()
+                    (interactive)
+                    (join-line -1)))
 
 ;; disable backup-files and set up auto-save mode
 (setq make-backup-files nil)
@@ -191,23 +191,23 @@
     (windswap-default-keybindings))
 
 (use-package which-key
-  :config
-  (which-key-mode)
-  (setq which-key-idle-delay 0.3)
-  (which-key-setup-minibuffer))
+    :config
+    (which-key-mode)
+    (setq which-key-idle-delay 0.3)
+    (which-key-setup-minibuffer))
 
 (use-package nyan-mode
-  :if window-system
-  :demand t
-  :config
-  (nyan-mode 1))
+    :if window-system
+    :demand t
+    :config
+    (nyan-mode 1))
 
 (use-package flyspell
-  :init (flyspell-mode +1))
+    :init (flyspell-mode +1))
 
 (use-package flycheck
-  :init (global-flycheck-mode)
-  :config (global-flycheck-mode))
+    :init (global-flycheck-mode)
+    :config (global-flycheck-mode))
 
 (use-package yasnippet
     :demand t
@@ -229,17 +229,17 @@
 
 ;; manually disable that mode if not using Gerrit.
 (use-package magit-gerrit
-  :after magit
-  :demand t
-  :config
-  (setq-default magit-gerrit-ssh-creds "gabriel.armelin@airties.com@gerrit.tooling.wifi-doctor.org:29418"
-                magit-gerrit-remote "origin"))
+    :after magit
+    :demand t
+    :config
+    (setq-default magit-gerrit-ssh-creds "gabriel.armelin@airties.com@gerrit.tooling.wifi-doctor.org:29418"
+                  magit-gerrit-remote "origin"))
 
 (use-package git-messenger
-  :bind ("C-x G" . git-messenger:popup-message)
-  :config
-  (setq git-messenger:show-detail t
-        git-messenger:use-magit-popup t))
+    :bind ("C-x G" . git-messenger:popup-message)
+    :config
+    (setq git-messenger:show-detail t
+          git-messenger:use-magit-popup t))
 
 (use-package markdown-mode
     :config
@@ -257,9 +257,9 @@
 (use-package multiple-cursors
     :bind
     (("C-S-c C-S-c" . mc/edit-lines)
-    ("C->" . mc/mark-next-like-this)
-    ("C-<" . mc/mark-previous-like-this)
-    ("C-c C-<" . mc/mark-all-like-this)))
+     ("C->" . mc/mark-next-like-this)
+     ("C-<" . mc/mark-previous-like-this)
+     ("C-c C-<" . mc/mark-all-like-this)))
 
 (use-package move-text
     :demand t
@@ -291,7 +291,7 @@
 
 (use-package org-superstar
     :hook (org-mode . (lambda ()
-                        (org-superstar-mode 1))))
+                          (org-superstar-mode 1))))
 
 (use-package duplicate-thing
     :bind ("M-c" . duplicate-thing))
@@ -307,63 +307,63 @@
 (use-package symbol-overlay
     :bind
     (("C-c h" . symbol-overlay-put)
-    ("M-n" . symbol-overlay-switch-forward)
-    ("M-p" . symbol-overlay-switch-backward)
-    ("<f7>" . symbol-overlay-mode)
-    ("<f8>" . symbol-overlay-remove-all)))
+     ("M-n" . symbol-overlay-switch-forward)
+     ("M-p" . symbol-overlay-switch-backward)
+     ("<f7>" . symbol-overlay-mode)
+     ("<f8>" . symbol-overlay-remove-all)))
 
 (use-package dired-filter)
 
 (use-package dired-narrow
-  :after dired
-  :demand t
-)
+    :after dired
+    :demand t
+    )
 
 (use-package dired-collapse
-  :after dired
-  :demand t
-)
+    :after dired
+    :demand t
+    )
 
 (use-package dired-rainbow
-  :after dired
-  :demand t
-  :config
-  (progn
-    (dired-rainbow-define-chmod directory "#6cb2eb" "d.*")
-    (dired-rainbow-define html "#eb5286" ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
-    (dired-rainbow-define xml "#f2d024" ("xml" "xsd" "xsl" "xslt" "wsdl" "bib" "json" "msg" "pgn" "rss" "yaml" "yml" "rdata"))
-    (dired-rainbow-define document "#9561e2" ("docm" "doc" "docx" "odb" "odt" "pdb" "pdf" "ps" "rtf" "djvu" "epub" "odp" "ppt" "pptx"))
-    (dired-rainbow-define markdown "#ffed4a" ("org" "etx" "info" "markdown" "md" "mkd" "nfo" "pod" "rst" "tex" "textfile" "txt"))
-    (dired-rainbow-define database "#6574cd" ("xlsx" "xls" "csv" "accdb" "db" "mdb" "sqlite" "nc"))
-    (dired-rainbow-define media "#de751f" ("mp3" "mp4" "MP3" "MP4" "avi" "mpeg" "mpg" "flv" "ogg" "mov" "mid" "midi" "wav" "aiff" "flac"))
-    (dired-rainbow-define image "#f66d9b" ("tiff" "tif" "cdr" "gif" "ico" "jpeg" "jpg" "png" "psd" "eps" "svg"))
-    (dired-rainbow-define log "#c17d11" ("log"))
-    (dired-rainbow-define shell "#f6993f" ("awk" "bash" "bat" "sed" "sh" "zsh" "vim"))
-    (dired-rainbow-define interpreted "#38c172" ("py" "ipynb" "rb" "pl" "t" "msql" "mysql" "pgsql" "sql" "r" "clj" "cljs" "scala" "js"))
-    (dired-rainbow-define compiled "#4dc0b5" ("asm" "cl" "lisp" "el" "c" "h" "c++" "h++" "hpp" "hxx" "m" "cc" "cs" "cp" "cpp" "go" "f" "for" "ftn" "f90" "f95" "f03" "f08" "s" "rs" "hi" "hs" "pyc" ".java"))
-    (dired-rainbow-define executable "#8cc4ff" ("exe" "msi"))
-    (dired-rainbow-define compressed "#51d88a" ("7z" "zip" "bz2" "tgz" "txz" "gz" "xz" "z" "Z" "jar" "war" "ear" "rar" "sar" "xpi" "apk" "xz" "tar"))
-    (dired-rainbow-define packaged "#faad63" ("deb" "rpm" "apk" "jad" "jar" "cab" "pak" "pk3" "vdf" "vpk" "bsp"))
-    (dired-rainbow-define encrypted "#ffed4a" ("gpg" "pgp" "asc" "bfe" "enc" "signature" "sig" "p12" "pem"))
-    (dired-rainbow-define fonts "#6cb2eb" ("afm" "fon" "fnt" "pfb" "pfm" "ttf" "otf"))
-    (dired-rainbow-define partition "#e3342f" ("dmg" "iso" "bin" "nrg" "qcow" "toast" "vcd" "vmdk" "bak"))
-    (dired-rainbow-define vc "#0074d9" ("git" "gitignore" "gitattributes" "gitmodules"))
-    (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*")
-    ))
+    :after dired
+    :demand t
+    :config
+    (progn
+        (dired-rainbow-define-chmod directory "#6cb2eb" "d.*")
+        (dired-rainbow-define html "#eb5286" ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
+        (dired-rainbow-define xml "#f2d024" ("xml" "xsd" "xsl" "xslt" "wsdl" "bib" "json" "msg" "pgn" "rss" "yaml" "yml" "rdata"))
+        (dired-rainbow-define document "#9561e2" ("docm" "doc" "docx" "odb" "odt" "pdb" "pdf" "ps" "rtf" "djvu" "epub" "odp" "ppt" "pptx"))
+        (dired-rainbow-define markdown "#ffed4a" ("org" "etx" "info" "markdown" "md" "mkd" "nfo" "pod" "rst" "tex" "textfile" "txt"))
+        (dired-rainbow-define database "#6574cd" ("xlsx" "xls" "csv" "accdb" "db" "mdb" "sqlite" "nc"))
+        (dired-rainbow-define media "#de751f" ("mp3" "mp4" "MP3" "MP4" "avi" "mpeg" "mpg" "flv" "ogg" "mov" "mid" "midi" "wav" "aiff" "flac"))
+        (dired-rainbow-define image "#f66d9b" ("tiff" "tif" "cdr" "gif" "ico" "jpeg" "jpg" "png" "psd" "eps" "svg"))
+        (dired-rainbow-define log "#c17d11" ("log"))
+        (dired-rainbow-define shell "#f6993f" ("awk" "bash" "bat" "sed" "sh" "zsh" "vim"))
+        (dired-rainbow-define interpreted "#38c172" ("py" "ipynb" "rb" "pl" "t" "msql" "mysql" "pgsql" "sql" "r" "clj" "cljs" "scala" "js"))
+        (dired-rainbow-define compiled "#4dc0b5" ("asm" "cl" "lisp" "el" "c" "h" "c++" "h++" "hpp" "hxx" "m" "cc" "cs" "cp" "cpp" "go" "f" "for" "ftn" "f90" "f95" "f03" "f08" "s" "rs" "hi" "hs" "pyc" ".java"))
+        (dired-rainbow-define executable "#8cc4ff" ("exe" "msi"))
+        (dired-rainbow-define compressed "#51d88a" ("7z" "zip" "bz2" "tgz" "txz" "gz" "xz" "z" "Z" "jar" "war" "ear" "rar" "sar" "xpi" "apk" "xz" "tar"))
+        (dired-rainbow-define packaged "#faad63" ("deb" "rpm" "apk" "jad" "jar" "cab" "pak" "pk3" "vdf" "vpk" "bsp"))
+        (dired-rainbow-define encrypted "#ffed4a" ("gpg" "pgp" "asc" "bfe" "enc" "signature" "sig" "p12" "pem"))
+        (dired-rainbow-define fonts "#6cb2eb" ("afm" "fon" "fnt" "pfb" "pfm" "ttf" "otf"))
+        (dired-rainbow-define partition "#e3342f" ("dmg" "iso" "bin" "nrg" "qcow" "toast" "vcd" "vmdk" "bak"))
+        (dired-rainbow-define vc "#0074d9" ("git" "gitignore" "gitattributes" "gitmodules"))
+        (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*")
+        ))
 
 (use-package diredfl
     :config
     (diredfl-global-mode))
 
 (use-package peep-dired
-  :ensure t
-  :after dired
-  :demand t
-  :defer t ; don't access `dired-mode-map' until `peep-dired' is loaded
-  :bind (:map dired-mode-map
-              ("P" . peep-dired))
-  :config
-  (setq peep-dired-cleanup-on-disable t))
+    :ensure t
+    :after dired
+    :demand t
+    :defer t ; don't access `dired-mode-map' until `peep-dired' is loaded
+    :bind (:map dired-mode-map
+                ("P" . peep-dired))
+    :config
+    (setq peep-dired-cleanup-on-disable t))
 
 (use-package dired-git-info
     :after dired
@@ -392,12 +392,12 @@
 (use-package multi-vterm :ensure t)
 
 (use-package projectile
-  :ensure t
-  :init
-  (projectile-mode +1)
-  :bind (:map projectile-mode-map
-              ("s-p" . projectile-command-map)
-              ("C-c p" . projectile-command-map)))
+    :ensure t
+    :init
+    (projectile-mode +1)
+    :bind (:map projectile-mode-map
+                ("s-p" . projectile-command-map)
+                ("C-c p" . projectile-command-map)))
 
 ;; begin company-mode setup ;;;
 
@@ -409,12 +409,12 @@
         (yas-expand)))
 
 (defun company-mode/backend-with-yas (backend)
-  (if (or (not company-mode/enable-yas) 
-          (and (listp backend)    
-               (member 'company-yasnippet backend)))
-          backend
-      (append (if (consp backend) backend (list backend))
-              '(:with company-yasnippet))))
+    (if (or (not company-mode/enable-yas) 
+            (and (listp backend)    
+                 (member 'company-yasnippet backend)))
+            backend
+        (append (if (consp backend) backend (list backend))
+                '(:with company-yasnippet))))
 
 
 
@@ -464,10 +464,10 @@
 
 (add-hook 'company-mode-hook
           (lambda ()
-            (substitute-key-definition
-             'company-complete-common
-             'company-yasnippet-or-completion
-             company-active-map)))
+              (substitute-key-definition
+               'company-complete-common
+               'company-yasnippet-or-completion
+               company-active-map)))
 (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
 ;;end company-mode setup
 
@@ -481,11 +481,11 @@
           helm-recentf-fuzzy-match    t)
     :bind 
     (("M-x" . helm-M-x)
-    ("C-x b" . helm-multi-files)
-    ("C-x C-f" . helm-find-files)
-    ("C-x C-r" . helm-recentf)
-    ("C-h a" . helm-apropos)
-    ("M-y" . helm-show-kill-ring)))
+     ("C-x b" . helm-multi-files)
+     ("C-x C-f" . helm-find-files)
+     ("C-x C-r" . helm-recentf)
+     ("C-h a" . helm-apropos)
+     ("M-y" . helm-show-kill-ring)))
 
 (use-package helm-projectile
     :after projectile
@@ -560,16 +560,16 @@
 
 ;; Enable sbt mode for executing sbt commands
 (use-package sbt-mode
-  :commands sbt-start sbt-command
-  :config
-  ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
-  ;; allows using SPACE when in the minibuffer
-  (substitute-key-definition
-   'minibuffer-complete-word
-   'self-insert-command
-   minibuffer-local-completion-map)
-   ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
-  (setq sbt:program-options '("-Dsbt.supershell=false")))
+    :commands sbt-start sbt-command
+    :config
+    ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
+    ;; allows using SPACE when in the minibuffer
+    (substitute-key-definition
+     'minibuffer-complete-word
+     'self-insert-command
+     minibuffer-local-completion-map)
+    ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
+    (setq sbt:program-options '("-Dsbt.supershell=false")))
 
 (use-package js2-mode 
     :mode
@@ -577,7 +577,7 @@
      ("\\.avsc\\'" . js2-mode)))
 
 (use-package cider
-  :ensure t)
+    :ensure t)
 
 
 (use-package groovy-mode
@@ -587,25 +587,25 @@
 (use-package dap-mode
     :hook
     ((lsp-mode . dap-mode)
-    (lsp-mode . dap-ui-mode)
-    (clojure-mode . lsp)
-    (clojurec-mode . lsp)
-    (clojurescript-mode . lsp)))
+     (lsp-mode . dap-ui-mode)
+     (clojure-mode . lsp)
+     (clojurec-mode . lsp)
+     (clojurescript-mode . lsp)))
 
 ;; Use the Debug Adapter Protocol for running tests and debugging
 (use-package posframe
-  ;; Posframe is a pop-up tool that must be manually installed for dap-mode
-  )
+    ;; Posframe is a pop-up tool that must be manually installed for dap-mode
+    )
 
 (use-package elpy
-  :ensure t
-  :init
-  (elpy-enable))
+    :ensure t
+    :init
+    (elpy-enable))
 
 (use-package ein
     :ensure t
     :init
-        (setq ein:output-area-inlined-images t))
+    (setq ein:output-area-inlined-images t))
 
 ;; (use-package lsp-python-ms
 ;;   :ensure t
@@ -630,17 +630,17 @@
 (use-package lsp-treemacs
     :after lsp-mode
     :bind (:map lsp-mode-map
-              ("C-<f8>" . lsp-treemacs-errors-list)
-              ("M-<f8>" . lsp-treemacs-symbols)
-              ("s-<f8>" . lsp-treemacs-java-deps-list))
+                ("C-<f8>" . lsp-treemacs-errors-list)
+                ("M-<f8>" . lsp-treemacs-symbols)
+                ("s-<f8>" . lsp-treemacs-java-deps-list))
     :init (lsp-treemacs-sync-mode 1))
 
 
 
 ;;; Airties custom scripts
 (defun send-to-vterm (beg end)
-  (interactive "r")
-  (process-send-region "vterm" beg end))
+    (interactive "r")
+    (process-send-region "vterm" beg end))
 
 (global-set-key (kbd "C-c C-v") 'send-to-vterm)
 
