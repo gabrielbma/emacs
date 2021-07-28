@@ -611,10 +611,13 @@
 
 ;; Enable nice rendering of documentation on hover
 (use-package lsp-ui)
-
-
-
-
+(use-package lsp-treemacs
+    :after lsp-mode
+    :bind (:map lsp-mode-map
+              ("C-<f8>" . lsp-treemacs-errors-list)
+              ("M-<f8>" . lsp-treemacs-symbols)
+              ("s-<f8>" . lsp-treemacs-java-deps-list))
+    :init (lsp-treemacs-sync-mode 1))
 
 
 
