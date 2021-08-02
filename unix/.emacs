@@ -175,6 +175,12 @@
 ;;      '(tramp-default-user "gabriel.armelin"))
 ;;     )
 
+(use-package ediff
+    :custom
+    ((ediff-window-setup-function 'ediff-setup-windows-plain)
+     (ediff-diff-options "-w")
+     (ediff-split-window-function 'split-window-horizontally)))
+
 (use-package zenburn-theme
     :demand t
     :config
