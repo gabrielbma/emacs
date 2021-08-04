@@ -666,12 +666,11 @@
 (defun toggle-whitespace-mode-style ()
     "Toggle 'whitespace-mode' style."
     (interactive)
-    (let* ((min '(tabs tab-mark face trailing))
-           (max '(tabs tab-mark spaces space-mark lines lines-tail newline newline-mark empty face trailing))
-           (style (if (equal whitespace-active-style min) max min)))
-        (setq whitespace-style style))
-    (whitespace-turn-off)
-    (whitespace-turn-on))
+    ;; (let* ((min '(tabs tab-mark face trailing))
+    ;;        (max '(tabs tab-mark spaces space-mark lines lines-tail newline newline-mark empty face trailing))
+    ;;        (style (if (equal whitespace-active-style min) max min)))
+    ;;     (setq whitespace-style style))
+    (whitespace-mode (if (bound-and-true-p whitespace-mode) -1 1)))
 
 (defun toggle-highlight-indentation ()
     "Toggle 'highlight-indentation'."
@@ -686,13 +685,20 @@
            (style (if (equal show-paren-style min) max min)))
         (setq show-paren-style style)))
 
+(defun toggle-rainbow-delimiters ()
+    "Toggle 'rainbow-delimiters-mode'."
+    (interactive)
+    (rainbow-delimiters-mode (if (bound-and-true-p rainbow-delimiters-mode) -1 1)))
+
 (progn
     (define-prefix-command 'toggles-keymap)
     (define-key toggles-keymap (kbd "<f1>") 'toggle-line-numbers-mode)
     (define-key toggles-keymap (kbd "<f2>") 'toggle-fill-column-indicator)
     (define-key toggles-keymap (kbd "<f3>") 'toggle-whitespace-mode-style)
     (define-key toggles-keymap (kbd "<f4>") 'toggle-show-paren-mode-style)
-    (define-key toggles-keymap (kbd "<f5>") 'toggle-highlight-indentation))
+    (define-key toggles-keymap (kbd "<f5>") 'toggle-highlight-indentation)
+    (define-key toggles-keymap (kbd "<f6>") 'toggle-rainbow-delimiters)
+    )
 
 (global-set-key (kbd "<f12>") toggles-keymap)
 
