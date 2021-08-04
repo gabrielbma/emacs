@@ -688,6 +688,7 @@
     (define-key toggles-keymap (kbd "<f5>") 'toggle-highlight-indentation)
     (define-key toggles-keymap (kbd "<f6>") 'toggle-rainbow-delimiters)
     (define-key toggles-keymap (kbd "<f7>") 'symbol-overlay-mode)
+    (define-key toggles-keymap (kbd "<f8>") 'toggle-truncate-lines)
     )
 
 (global-set-key (kbd "<f12>") toggles-keymap)
