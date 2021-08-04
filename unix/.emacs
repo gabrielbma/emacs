@@ -197,6 +197,7 @@
     (windswap-default-keybindings))
 
 (use-package which-key
+    :demand t
     :config
     (which-key-mode)
     (setq which-key-idle-delay 0.3)
@@ -675,7 +676,7 @@
 (defun toggle-highlight-indentation ()
     "Toggle 'highlight-indentation'."
     (interactive)
-    (highlight-indentation-mode (if (bound-and-true-p highlight-indentation-mode) -1 1)))
+    (highlight-indent-guides-mode (if (bound-and-true-p highlight-indent-guides-mode) -1 1)))
 
 (defun toggle-show-paren-mode-style ()
     "Toggle 'show-paren-mode' style."
@@ -685,17 +686,15 @@
            (style (if (equal show-paren-style min) max min)))
         (setq show-paren-style style)))
 
-;; (use-package highlight-indentation :ensure t)
-
 (progn
-    (define-prefix-command 'visuals-keymap)
-    (define-key visuals-keymap (kbd "<f1>") 'toggle-line-numbers-mode)
-    (define-key visuals-keymap (kbd "<f2>") 'toggle-fill-column-indicator)
-    (define-key visuals-keymap (kbd "<f3>") 'toggle-whitespace-mode-style)
-    (define-key visuals-keymap (kbd "<f4>") 'toggle-highlight-indentation)
-    (define-key visuals-keymap (kbd "<f5>") 'toggle-show-paren-mode-style))
+    (define-prefix-command 'toggles-keymap)
+    (define-key toggles-keymap (kbd "<f1>") 'toggle-line-numbers-mode)
+    (define-key toggles-keymap (kbd "<f2>") 'toggle-fill-column-indicator)
+    (define-key toggles-keymap (kbd "<f3>") 'toggle-whitespace-mode-style)
+    (define-key toggles-keymap (kbd "<f4>") 'toggle-show-paren-mode-style)
+    (define-key toggles-keymap (kbd "<f5>") 'toggle-highlight-indentation))
 
-(global-set-key (kbd "<f11>") visuals-keymap)
+(global-set-key (kbd "<f12>") toggles-keymap)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
