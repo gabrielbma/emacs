@@ -641,7 +641,7 @@
 (global-set-key (kbd "C-c C-v") 'send-to-vterm)
 
 
-;;; My list of Togles
+;;; My list of Toggles
 (defun toggle-line-numbers-mode ()
     "Toggle 'line-numbers-mode'."
     (interactive)
@@ -687,6 +687,7 @@
     (define-key toggles-keymap (kbd "<f4>") 'toggle-show-paren-mode-style)
     (define-key toggles-keymap (kbd "<f5>") 'toggle-highlight-indentation)
     (define-key toggles-keymap (kbd "<f6>") 'toggle-rainbow-delimiters)
+    (define-key toggles-keymap (kbd "<f7>") 'symbol-overlay-mode)
     )
 
 (global-set-key (kbd "<f12>") toggles-keymap)
