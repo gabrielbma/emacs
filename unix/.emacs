@@ -187,7 +187,7 @@
     (load-theme 'zenburn t))
 
 (use-package windswap
-    :demand
+    :demand t
     :bind
     (("H-n" . windswap-down)
      ("H-p" . windswap-up)
@@ -363,10 +363,8 @@
     (diredfl-global-mode))
 
 (use-package peep-dired
-    :ensure t
     :after dired
     :demand t
-    :defer t ; don't access `dired-mode-map' until `peep-dired' is loaded
     :bind (:map dired-mode-map
                 ("P" . peep-dired))
     :config
@@ -399,7 +397,6 @@
 (use-package multi-vterm :ensure t)
 
 (use-package projectile
-    :ensure t
     :init
     (projectile-mode +1)
     :bind (:map projectile-mode-map
@@ -480,7 +477,6 @@
 
 (use-package helm
     :demand t
-    :ensure t
     :config
     (helm-autoresize-mode 1)
     (setq helm-M-x-fuzzy-match t)
@@ -496,7 +492,6 @@
 
 (use-package helm-projectile
     :after projectile
-    :ensure t
     :demand t
     :config
     (helm-projectile-on)
@@ -507,7 +502,6 @@
 
 (use-package helm-swoop
     :after (helm)
-    :ensure t
     :bind
     (("C-i" . helm-swoop)
      ("M-I" . helm-swoop-back-to-last-point)
@@ -544,15 +538,12 @@
 (use-package helm-rg)
 
 (use-package rainbow-delimiters
-    :ensure t
     :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package aggressive-indent
-    :ensure t
     :hook (emacs-lisp-mode . aggressive-indent-mode))
 
 (use-package  highlight-indent-guides
-    :ensure t
     :hook (prog-mode . highlight-indent-guides-mode)
     :custom 
     (highlight-indent-guides-method 'character)
@@ -605,12 +596,10 @@
     )
 
 (use-package elpy
-    :ensure t
     :init
     (elpy-enable))
 
 (use-package ein
-    :ensure t
     :init
     (setq ein:output-area-inlined-images t))
 
