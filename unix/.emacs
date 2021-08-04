@@ -134,7 +134,7 @@
 
 ;; Enable defer and ensure by default for use-package
 ;; Keep auto-save/backup files separate from source code:  https://github.com/scalameta/metals/issues/1027
-(setq use-package-always-defer t
+(setq use-package-always-defer t    
       use-package-always-ensure t
       backup-directory-alist `((".*" . ,temporary-file-directory))
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
@@ -546,16 +546,16 @@
     :ensure t
     :hook (prog-mode . rainbow-delimiters-mode))
 
-;; temporarily disabled 
 (use-package aggressive-indent
     :ensure t
     :hook (emacs-lisp-mode . aggressive-indent-mode))
 
-(use-package indent-guide
+(use-package  highlight-indent-guides
     :ensure t
-    :init
-    (setq indent-guide-recursive t)
-    :hook (prog-mode . indent-guide-mode))
+    :hook (prog-mode . highlight-indent-guides-mode)
+    :custom 
+    (highlight-indent-guides-method 'character)
+    (highlight-indent-guides-responsive 'top))
 
 ;; Enable scala-mode for highlighting, indentation and motion commands
 (use-package scala-mode
@@ -649,6 +649,53 @@
     (process-send-region "vterm" beg end))
 
 (global-set-key (kbd "C-c C-v") 'send-to-vterm)
+
+
+;;; My list of Togles
+(defun toggle-line-numbers-mode ()
+    "Toggle 'line-numbers-mode'."
+    (interactive)
+    (global-display-line-numbers-mode (if (bound-and-true-p global-display-line-numbers-mode) -1 1)))
+
+(defun toggle-fill-column-indicator ()
+    "Toggle 'display-fill-column-indicator'."
+    (interactive)
+    (global-display-fill-column-indicator-mode (if (bound-and-true-p global-display-fill-column-indicator-mode) -1 1)))
+
+(defun toggle-whitespace-mode-style ()
+    "Toggle 'whitespace-mode' style."
+    (interactive)
+    (let* ((min '(tabs tab-mark face trailing))
+           (max '(tabs tab-mark spaces space-mark lines lines-tail newline newline-mark empty face trailing))
+           (style (if (equal whitespace-active-style min) max min)))
+        (setq whitespace-style style))
+    (whitespace-turn-off)
+    (whitespace-turn-on))
+
+(defun toggle-highlight-indentation ()
+    "Toggle 'highlight-indentation'."
+    (interactive)
+    (highlight-indentation-mode (if (bound-and-true-p highlight-indentation-mode) -1 1)))
+
+(defun toggle-show-paren-mode-style ()
+    "Toggle 'show-paren-mode' style."
+    (interactive)
+    (let* ((min 'parenthesis)
+           (max 'expression)
+           (style (if (equal show-paren-style min) max min)))
+        (setq show-paren-style style)))
+
+;; (use-package highlight-indentation :ensure t)
+
+(progn
+    (define-prefix-command 'visuals-keymap)
+    (define-key visuals-keymap (kbd "<f1>") 'toggle-line-numbers-mode)
+    (define-key visuals-keymap (kbd "<f2>") 'toggle-fill-column-indicator)
+    (define-key visuals-keymap (kbd "<f3>") 'toggle-whitespace-mode-style)
+    (define-key visuals-keymap (kbd "<f4>") 'toggle-highlight-indentation)
+    (define-key visuals-keymap (kbd "<f5>") 'toggle-show-paren-mode-style))
+
+(global-set-key (kbd "<f11>") visuals-keymap)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
