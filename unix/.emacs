@@ -143,6 +143,8 @@
 (use-package tramp
     :defer 5
     :config
+    ;; (setq tramp-debug-buffer t) ;; debug
+    ;; (setq tramp-verbose 10) ;; debug
     (with-eval-after-load 'tramp-cache
         (setq tramp-persistency-file-name "~/.emacs.d/tramp"))
     (custom-set-variables
