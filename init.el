@@ -26,6 +26,9 @@
 ;; Narrowing
 (put 'narrow-to-region 'disabled nil)
 
+;; preserve scroll position
+(setq scroll-preserve-screen-position t)
+
 ;; Short messages
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -478,6 +481,12 @@
      ("C-x C-r" . helm-recentf)
      ("C-h a" . helm-apropos)
      ("M-y" . helm-show-kill-ring)))
+
+(use-package helm-fd
+    :straight
+    (helm-df :type git :host github :repo "lerouxrgd/helm-fd")
+    :bind (:map helm-command-map
+                ("/" . helm-fd)))
 
 (use-package helm-projectile
     :after projectile
