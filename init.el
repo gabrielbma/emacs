@@ -107,8 +107,8 @@
 
 ;; disable backup-files and set up auto-save mode
 (setq make-backup-files nil)
-(setq backup-directory-alist '(("." . "~/MyEmacsBackups")))
-(setq auto-save-file-name-transforms '(("." . "~/MyEmacsBackups")))
+;;(setq backup-directory-alist '(("." . "~/MyEmacsBackups")))
+;;(setq auto-save-file-name-transforms '(("." . "~/MyEmacsBackups")))
 (auto-save-visited-mode 1)
 (setq auto-save-interval 10
       auto-save-timeout 10)
