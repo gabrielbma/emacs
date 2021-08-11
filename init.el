@@ -676,17 +676,20 @@
     (interactive)
     (rainbow-delimiters-mode (if (bound-and-true-p rainbow-delimiters-mode) -1 1)))
 
-(global-set-key (kbd "<f12>") 
-                (progn
-                    (define-prefix-command 'toggles-keymap)
-                    (define-key toggles-keymap (kbd "<f1>") 'toggle-line-numbers-mode)
-                    (define-key toggles-keymap (kbd "<f2>") 'toggle-fill-column-indicator)
-                    (define-key toggles-keymap (kbd "<f3>") 'toggle-whitespace-mode-style)
-                    (define-key toggles-keymap (kbd "<f4>") 'toggle-show-paren-mode-style)
-                    (define-key toggles-keymap (kbd "<f5>") 'toggle-highlight-indentation)
-                    (define-key toggles-keymap (kbd "<f6>") 'toggle-rainbow-delimiters)
-                    (define-key toggles-keymap (kbd "<f7>") 'symbol-overlay-mode)
-                    (define-key toggles-keymap (kbd "<f8>") 'toggle-truncate-lines)))
+(progn
+    (define-prefix-command 'toggles-keymap)
+    (define-key toggles-keymap (kbd "<f1>") 'toggle-line-numbers-mode)
+    (define-key toggles-keymap (kbd "<f2>") 'toggle-fill-column-indicator)
+    (define-key toggles-keymap (kbd "<f3>") 'toggle-whitespace-mode-style)
+    (define-key toggles-keymap (kbd "<f4>") 'toggle-show-paren-mode-style)
+    (define-key toggles-keymap (kbd "<f5>") 'toggle-highlight-indentation)
+    (define-key toggles-keymap (kbd "<f6>") 'toggle-rainbow-delimiters)
+    (define-key toggles-keymap (kbd "<f7>") 'symbol-overlay-mode)
+    (define-key toggles-keymap (kbd "<f8>") 'toggle-truncate-lines)
+    )
+
+(global-set-key (kbd "<f12>") toggles-keymap)
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
