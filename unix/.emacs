@@ -153,7 +153,6 @@
     (setq tramp-default-method "ssh"
           tramp-chunksize 500
           tramp-terminal-type "tramp"
-          tramp-default-user-alist '(("\\`su\\(do\\)?\\'" nil "root"))
           tramp-adb-program "adb"
           ;; use the settings in ~/.ssh/config instead of Tramp's
           tramp-use-ssh-controlmaster-options nil
@@ -164,18 +163,6 @@
                    (not (let ((method (file-remote-p name 'method)))
                             (when (stringp method)
                                 (member method '("su" "sudo")))))))))
-
-;; (use-package tramp
-;;     :config
-;;     (setq tramp-chunksize 500) 
-;;     (setq tramp-terminal-type "tramp")
-;;     (setq tramp-debug-buffer t) ;; debug
-;;     (setq tramp-verbose 6) ;; debug
-;;     (eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))
-;;     (custom-set-variables
-;;      '(tramp-default-method "ssh")
-;;      '(tramp-default-user "gabriel.armelin"))
-;;     )
 
 (use-package ediff
     :custom
