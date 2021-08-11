@@ -572,8 +572,11 @@
     (("\\.js\\'" . js2-mode)
      ("\\.avsc\\'" . js2-mode)))
 
-(use-package cider)
+(use-package json-mode
+    :mode
+    (("\\.template\\'" . json-mode)))
 
+(use-package cider)
 
 (use-package groovy-mode
     :mode
