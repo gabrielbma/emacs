@@ -118,30 +118,26 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'package)
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+        (with-current-buffer
+                (url-retrieve-synchronously
+                 "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+                 'silent 'inhibit-cookies)
+            (goto-char (point-max))
+            (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
 
-;; Add melpa to your packages repositories
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
-(package-initialize)
-
-;; Install use-package if not already installed
-(unless (package-installed-p 'use-package)
-    (package-refresh-contents)
-    (package-install 'use-package))
-
-(require 'use-package)
-
-;; Enable defer and ensure by default for use-package
-;; Keep auto-save/backup files separate from source code:  https://github.com/scalameta/metals/issues/1027
-(setq use-package-always-defer t    
-      use-package-always-ensure t
-      backup-directory-alist `((".*" . ,temporary-file-directory))
-      auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
 
 ;; Set up Tramp to use SSH
 (use-package tramp
-    :defer 5
+    :straight (tramp :build t :pre-build (("make" "autoloads")))
     :config
     ;; (setq tramp-debug-buffer t) ;; debug
     ;; (setq tramp-verbose 10) ;; debug
@@ -369,21 +365,25 @@
     :bind (("C-c s" . shell-pop)))
 
 (use-package vterm
+    :disabled t
     :bind (:map vterm-mode-map
                 ("M-P" . 'windmove-up)
                 ("M-N" . 'windmove-down)
                 ("M-F" . 'windmove-right)
                 ("M-B" . 'windmove-left))
-    :ensure t)
+    :config
+    (setq vterm-always-compile-module f))
 
 ;; Evaluation whether the keybind set up to vterm is working or not.
 ;; In case that keybinding works well then this mode can be removed.
 (use-package vterm-toggle
+    :disabled t
     :bind (("H-z" . vterm-toggle)
            ("H-F" . vterm-toggle-forward)
            ("H-B" . vterm-toggle-backward)))
 
-(use-package multi-vterm :ensure t)
+(use-package multi-vterm 
+    :disabled t)
 
 (use-package projectile
     :init
@@ -563,8 +563,7 @@
     (("\\.js\\'" . js2-mode)
      ("\\.avsc\\'" . js2-mode)))
 
-(use-package cider
-    :ensure t)
+(use-package cider)
 
 
 (use-package groovy-mode
