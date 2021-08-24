@@ -533,7 +533,9 @@
     ;; If nil, you can slightly boost invoke speed in exchange for text color
     (setq helm-swoop-speed-or-color t))
 
-(use-package helm-ag)
+(use-package helm-ag
+    :config
+    (setq helm-boring-buffer-regexp-list '("\\` " "\\`\\*Echo Area" "\\`\\*Minibuf")))
 
 (use-package helm-rg)
 
