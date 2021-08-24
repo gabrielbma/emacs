@@ -305,7 +305,9 @@
      ("M-n" . symbol-overlay-switch-forward)
      ("M-p" . symbol-overlay-switch-backward)
      ("<f7>" . symbol-overlay-mode)
-     ("<f8>" . symbol-overlay-remove-all)))
+     ("<f8>" . symbol-overlay-remove-all))
+    :config
+    (set-face-background 'symbol-overlay-default-face "#606060"))
 
 (use-package dired-filter)
 
