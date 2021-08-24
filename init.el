@@ -578,6 +578,8 @@
     :mode
     (("\\.template\\'" . json-mode)))
 
+(use-package nodejs-repl)
+
 (use-package cider)
 
 (use-package groovy-mode
