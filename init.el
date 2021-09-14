@@ -371,6 +371,11 @@
 
 (use-package puppet-mode)
 
+(use-package web-mode
+    :config
+    (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode)))
+
+
 (use-package vterm
     :bind (:map vterm-mode-map
                 ("M-P" . 'windmove-up)
