@@ -372,25 +372,21 @@
 (use-package puppet-mode)
 
 (use-package vterm
-    :disabled t
     :bind (:map vterm-mode-map
                 ("M-P" . 'windmove-up)
                 ("M-N" . 'windmove-down)
                 ("M-F" . 'windmove-right)
-                ("M-B" . 'windmove-left))
-    :config
-    (setq vterm-always-compile-module f))
+                ("M-B" . 'windmove-left)))
 
 ;; Evaluation whether the keybind set up to vterm is working or not.
 ;; In case that keybinding works well then this mode can be removed.
 (use-package vterm-toggle
-    :disabled t
     :bind (("H-z" . vterm-toggle)
            ("H-F" . vterm-toggle-forward)
            ("H-B" . vterm-toggle-backward)))
 
 (use-package multi-vterm 
-    :disabled t)
+    :disabled f)
 
 (use-package projectile
     :init
