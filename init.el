@@ -578,7 +578,14 @@
     :mode
     (("\\.template\\'" . json-mode)))
 
-(use-package nodejs-repl)
+(use-package nodejs-repl
+    :bind (:map js-mode-map
+                ("C-x C-e" . nodejs-repl-send-last-expression)
+                ("C-c C-j" . nodejs-repl-send-line)
+                ("C-c C-r" . nodejs-repl-send-region)
+                ("C-c C-c" . nodejs-repl-send-buffer)
+                ("C-c C-l" . nodejs-repl-load-file)
+                ("C-c C-z" . nodejs-repl-switch-to-repl)))
 
 (use-package cider)
 
