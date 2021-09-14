@@ -188,7 +188,7 @@
     :demand t
     :config
     (which-key-mode)
-    (setq which-key-idle-delay 0.3)
+    (setq which-key-idle-delay 1)
     (which-key-setup-minibuffer))
 
 (use-package nyan-mode
