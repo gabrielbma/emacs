@@ -369,6 +369,8 @@
     (setq shell-pop-full-span t)
     :bind (("C-c s" . shell-pop)))
 
+(use-package puppet-mode)
+
 (use-package vterm
     :disabled t
     :bind (:map vterm-mode-map
