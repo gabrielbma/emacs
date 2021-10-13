@@ -227,11 +227,20 @@
     :hook (prog-mode . real-auto-save-mode)
     :config (setq real-auto-save-interval 1))
 
+
+;; fix issue with Magit
+;; See: https://libredd.it/r/emacs/comments/po9cfj/magit_commands_broken/?sort=new
+(use-package project 
+    :demand t
+    :config
+    (setq project-switch-commands t))
+
 (use-package magit
     :bind (("C-x g" . magit-status)))
 
 ;; manually disable that mode if not using Gerrit.
 (use-package magit-gerrit
+    :disabled t
     :after magit
     :demand t
     :config
@@ -417,6 +426,7 @@
 (use-package multi-vterm)
 
 (use-package projectile
+    :disabled
     :init
     (projectile-mode +1)
     :bind (:map projectile-mode-map
