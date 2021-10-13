@@ -414,8 +414,7 @@
            ("H-F" . vterm-toggle-forward)
            ("H-B" . vterm-toggle-backward)))
 
-(use-package multi-vterm 
-    :disabled f)
+(use-package multi-vterm)
 
 (use-package projectile
     :init
