@@ -593,6 +593,7 @@
     (setq lsp-prefer-flymake nil))
 
 ;; Add metals backend for lsp-mode
+;; Note: metals should be download and compiled manually
 (use-package lsp-metals
     :custom
     ;; Metals claims to support range formatting by default but it supports range
