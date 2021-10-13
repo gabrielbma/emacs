@@ -137,6 +137,14 @@
 
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
+;; example to add my own repos
+;; (use-package <project_name>
+;;     :straight (:repo "https://github.com/gabrielbma/<project_name>.git")
+;; )
+
+(use-package guix)
+
+(use-package geiser-guile)
 
 ;; Set up Tramp to use SSH
 (use-package tramp
@@ -284,6 +292,16 @@
     (smartparens-global-mode t))
 
 
+(use-package org
+    :straight
+    (org :type git
+         :repo "https://git.savannah.gnu.org/git/emacs/org-mode.git"
+         :local-repo "org"
+         :depth full
+         :pre-build (straight-recipes-org-elpa--build)
+         :build (:not autoloads)
+         :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*"))))
+
 (use-package org-superstar
     :hook (org-mode . (lambda ()
                           (org-superstar-mode 1))))
@@ -423,61 +441,6 @@
         (append (if (consp backend) backend (list backend))
                 '(:with company-yasnippet))))
 
-
-
-;; (use-package company
-;;     :demand t
-;;     :config
-;;     (setq company-idle-delay 0)
-;;     (setq company-show-numbers t)
-;;     (setq company-minimum-prefix-length 2)
-;;     (setq company-dabbrev-downcase nil)
-;;     (setq company-dabbrev-other-buffers t)
-;;     (setq company-auto-complete nil)
-;;     (setq company-dabbrev-code-other-buffers 'all)
-;;     (setq company-dabbrev-code-everywhere t)
-;;     (setq company-dabbrev-code-ignore-case t)
-;;     (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
-;;     (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
-;;     :hook
-;;     (after-init . global-company-mode)
-;;     (company-mode . (lambda ()
-;;                         (substitute-key-definition
-;;                          'company-complete-common
-;;                          'company-yasnippet-or-completion
-;;                          company-active-map))))
-
-
-(defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
-(use-package company
-    :demand t
-    :config
-    (setq company-idle-delay 0)
-    (setq company-show-numbers t)
-    (setq company-minimum-prefix-length 2)
-    (setq company-dabbrev-downcase nil)
-    (setq company-dabbrev-other-buffers t)
-    (setq company-auto-complete nil)
-    (setq company-dabbrev-code-other-buffers 'all)
-    (setq company-dabbrev-code-everywhere t)
-    (setq company-dabbrev-code-ignore-case t)
-    (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
-    (setq company-tooltip-align-annotations t
-          company-tooltip-flip-when-above t
-          ;; Easy navigation to candidates with M-<n>
-          company-show-numbers t)
-    :hook
-    (after-init . global-company-mode))
-
-(add-hook 'company-mode-hook
-          (lambda ()
-              (substitute-key-definition
-               'company-complete-common
-               'company-yasnippet-or-completion
-               company-active-map)))
-(setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
-;;end company-mode setup
-
 (use-package helm
     :demand t
     :config
@@ -564,8 +527,11 @@
 (use-package scala-mode
     :interpreter
     ("scala" . scala-mode)
-    :mode
+    :mode   
     (("\\.sc\\'" . scala-mode)))
+
+
+;;; End: Enable Scala-mode 
 
 ;; Enable sbt mode for executing sbt commands
 (use-package sbt-mode
@@ -604,6 +570,60 @@
     :mode
     (("\\.gradle\\'" . groovy-mode)))
 
+(use-package elpy
+    :init
+    (elpy-enable))
+
+(use-package ein
+    :init
+    (setq ein:output-area-inlined-images t))
+
+(use-package lsp-mode
+    :demand t
+    ;; Optional - enable lsp-mode automatically in scala files
+    :hook  (scala-mode . lsp)
+    (lsp-mode . lsp-lens-mode)
+    :config
+    ;; Uncomment following section if you would like to tune lsp-mode performance according to
+    ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
+    ;;       (setq gc-cons-threshold 100000000) ;; 100mb
+    ;;       (setq read-process-output-max (* 1024 1024)) ;; 1mb
+    ;;       (setq lsp-idle-delay 0.500)
+    ;;       (setq lsp-log-io nil)
+    ;;       (setq lsp-completion-provider :capf)
+    (setq lsp-prefer-flymake nil))
+
+;; Add metals backend for lsp-mode
+(use-package lsp-metals
+    :custom
+    ;; Metals claims to support range formatting by default but it supports range
+    ;; formatting of multiline strings only. You might want to disable it so that
+    ;; emacs can use indentation provided by scala-mode.
+    (lsp-metals-server-args '("-J-Dmetals.allow-multiline-string-formatting=off"))
+    :hook (scala-mode . lsp))
+
+;; (use-package lsp-python-ms
+;;   :ensure t
+;;   :init (setq lsp-python-ms-auto-install-server t)
+;;   :hook (python-mode . (lambda ()
+;;                           (require 'lsp-python-ms)
+;;                           (lsp))))  ; or lsp-deferred
+
+;; Enable nice rendering of documentation on hover
+;;   Warning: on some systems this package can reduce your emacs responsiveness significally.
+;;   (See: https://emacs-lsp.github.io/lsp-mode/page/performance/)
+;;   In that case you have to not only disable this but also remove from the packages since
+;;   lsp-mode can activate it automatically.
+(use-package lsp-ui)
+
+(use-package lsp-treemacs
+    :after lsp-mode
+    :bind (:map lsp-mode-map
+                ("C-<f8>" . lsp-treemacs-errors-list)
+                ("M-<f8>" . lsp-treemacs-symbols)
+                ("s-<f8>" . lsp-treemacs-java-deps-list))
+    :init (lsp-treemacs-sync-mode 1))
+
 (use-package dap-mode
     :hook
     ((lsp-mode . dap-mode)
@@ -617,43 +637,59 @@
     ;; Posframe is a pop-up tool that must be manually installed for dap-mode
     )
 
-(use-package elpy
-    :init
-    (elpy-enable))
-
-(use-package ein
-    :init
-    (setq ein:output-area-inlined-images t))
-
-;; (use-package lsp-python-ms
-;;   :ensure t
-;;   :init (setq lsp-python-ms-auto-install-server t)
-;;   :hook (python-mode . (lambda ()
-;;                           (require 'lsp-python-ms)
-;;                           (lsp))))  ; or lsp-deferred
-
-;; (use-package lsp-mode
-;;   ;; Enable lsp-mode automatically for language files
-;;   :hook  (scala-mode . lsp)
-;;          (lsp-mode . lsp-lens-mode)
-;;          (python-mode . lsp)
-;;   :config (setq lsp-prefer-flymake nil))
-
-;; ;; Add metals backend for lsp-mode
-;; (use-package lsp-metals
-;;   :config (setq lsp-metals-treeview-show-when-views-received t))
-
-;; Enable nice rendering of documentation on hover
-(use-package lsp-ui)
-(use-package lsp-treemacs
-    :after lsp-mode
-    :bind (:map lsp-mode-map
-                ("C-<f8>" . lsp-treemacs-errors-list)
-                ("M-<f8>" . lsp-treemacs-symbols)
-                ("s-<f8>" . lsp-treemacs-java-deps-list))
-    :init (lsp-treemacs-sync-mode 1))
+;; (use-package company
+;;     :demand t
+;;     :config
+;;     (setq company-idle-delay 0)
+;;     (setq company-show-numbers t)
+;;     (setq company-minimum-prefix-length 2)
+;;     (setq company-dabbrev-downcase nil)
+;;     (setq company-dabbrev-other-buffers t)
+;;     (setq company-auto-complete nil)
+;;     (setq company-dabbrev-code-other-buffers 'all)
+;;     (setq company-dabbrev-code-everywhere t)
+;;     (setq company-dabbrev-code-ignore-case t)
+;;     (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
+;;     (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+;;     :hook
+;;     (after-init . global-company-mode)
+;;     (company-mode . (lambda ()
+;;                         (substitute-key-definition
+;;                          'company-complete-common
+;;                          'company-yasnippet-or-completion
+;;                          company-active-map))))
 
 
+(defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
+(use-package company
+    :demand t
+    :config
+    (setq lsp-completion-provider :capf)
+    (setq company-idle-delay 0)
+    (setq company-show-numbers t)
+    (setq company-minimum-prefix-length 2)
+    (setq company-dabbrev-downcase nil)
+    (setq company-dabbrev-other-buffers t)
+    (setq company-auto-complete nil)
+    (setq company-dabbrev-code-other-buffers 'all)
+    (setq company-dabbrev-code-everywhere t)
+    (setq company-dabbrev-code-ignore-case t)
+    (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+    (setq company-tooltip-align-annotations t
+          company-tooltip-flip-when-above t
+          ;; Easy navigation to candidates with M-<n>
+          company-show-numbers t)
+    :hook
+    (after-init . global-company-mode))
+
+(add-hook 'company-mode-hook
+          (lambda ()
+              (substitute-key-definition
+               'company-complete-common
+               'company-yasnippet-or-completion
+               company-active-map)))
+(setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+;;end company-mode setup
 
 ;;; Airties custom scripts
 (defun send-to-vterm (beg end)
