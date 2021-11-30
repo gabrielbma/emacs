@@ -482,6 +482,7 @@
 
 
 (use-package helm-swoop
+    :disabled t
     :after (helm)
     ;; :bind
     ;; (("C-i" . helm-swoop)
