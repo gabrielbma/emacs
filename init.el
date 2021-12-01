@@ -483,24 +483,24 @@
 
 (use-package helm-swoop
     :after (helm)
-    :bind
-    (("C-i" . helm-swoop)
-     ("M-I" . helm-swoop-back-to-last-point)
-     ("C-c C-s" . helm-multi-swoop)
-     ;; ("C-x C-s" . helm-multi-swoop-all)
-     :map isearch-mode-map 
-     ;; When doing isearch, hand the word over to helm-swoop
-     ("M-i" . helm-swoop-from-isearch)
-     :map helm-swoop-map 
-     ;; From helm-swoop to helm-multi-swoop-all
-     ("M-i" . helm-multi-swoop-all-from-helm-swoop)
-     ;; Move up and down like isearch
-     ("C-p" . helm-previous-line)
-     ("C-n" . helm-next-line)
-     :map helm-multi-swoop-map
-     ;; Move up and down like isearch
-     ("C-p" . helm-previous-line)
-     ("C-n" . helm-next-line))
+    ;; :bind
+    ;; (("C-i" . helm-swoop)
+    ;;  ("M-I" . helm-swoop-back-to-last-point)
+    ;;  ("C-c C-s" . helm-multi-swoop)
+    ;;  ;; ("C-x C-s" . helm-multi-swoop-all)
+    ;;  :map isearch-mode-map 
+    ;;  ;; When doing isearch, hand the word over to helm-swoop
+    ;;  ("M-i" . helm-swoop-from-isearch)
+    ;;  :map helm-swoop-map 
+    ;;  ;; From helm-swoop to helm-multi-swoop-all
+    ;;  ("M-i" . helm-multi-swoop-all-from-helm-swoop)
+    ;;  ;; Move up and down like isearch
+    ;;  ("C-p" . helm-previous-line)
+    ;;  ("C-n" . helm-next-line)
+    ;;  :map helm-multi-swoop-map
+    ;;  ;; Move up and down like isearch
+    ;;  ("C-p" . helm-previous-line)
+    ;;  ("C-n" . helm-next-line))
     :config
     ;; If you prefer fuzzy matching
     ;; (setq helm-swoop-use-fuzzy-match t)
