@@ -212,6 +212,13 @@
     :init (global-flycheck-mode)
     :config (global-flycheck-mode))
 
+(use-package flycheck-pos-tip
+    :ensure t
+    :config
+    (use-package flycheck
+        :config
+        (setq flycheck-display-errors-function 'flycheck-pos-tip-error-messages)))
+
 (use-package yasnippet
     :demand t
     :config
