@@ -13,6 +13,15 @@
 (setq use-dialog-box     nil)
 (setq ring-bell-function 'ignore)
 
+;;
+(set-language-environment "UTF-8")
+(set-default-coding-systems 'utf-8)
+
+;; enable lingature in Mac port of Emacs
+(if (fboundp 'mac-auto-operator-composition-mode)
+        (mac-auto-operator-composition-mode))
+;(set-frame-font "Fira Code" nil t)
+
 ;; Inhibit startup/splash screen
 (setq inhibit-splash-screen   t)
 (setq inhibit-startup-message t)
