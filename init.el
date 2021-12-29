@@ -589,7 +589,25 @@
                 ("C-c C-l" . nodejs-repl-load-file)
                 ("C-c C-z" . nodejs-repl-switch-to-repl)))
 
-(use-package cider)
+(use-package cider
+    :demand t
+    :after org
+    :init
+    (require 'ob-clojure)
+    (setq org-babel-clojure-backend 'cider))
+
+(use-package clojure-snippets
+    :after cider)
+
+(use-package flycheck-clojure
+    :ensure t
+    :init
+    (add-hook 'after-init-hook 'global-flycheck-mode)
+    :config
+    (use-package flycheck
+        :config
+        (flycheck-clojure-setup)))
+
 
 (use-package groovy-mode
     :mode
