@@ -316,11 +316,19 @@
          :depth full
          :pre-build (straight-recipes-org-elpa--build)
          :build (:not autoloads)
-         :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*"))))
+         :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*")))
+    :init
+    (setq org-confirm-babel-evaluate nil))
 
 (use-package org-superstar
     :hook (org-mode . (lambda ()
                           (org-superstar-mode 1))))
+
+(use-package org-download
+    :config
+    ;; Drag-and-drop to `dired`
+    :hook
+    (dired-mode org-download-enable))
 
 (use-package duplicate-thing
     :bind ("M-c" . duplicate-thing))
