@@ -674,7 +674,9 @@
 
 (use-package elpy
     :init
-    (elpy-enable))
+    (elpy-enable)
+    :custom
+    (elpy-rpc-virtualenv-path 'current))
 
 (use-package ein
     :init
