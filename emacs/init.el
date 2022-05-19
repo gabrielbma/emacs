@@ -592,26 +592,34 @@
     :init
     (setq ein:output-area-inlined-images t))
 
-;; (use-package lsp-python-ms
-;;   :ensure t
-;;   :init (setq lsp-python-ms-auto-install-server t)
-;;   :hook (python-mode . (lambda ()
-;;                           (require 'lsp-python-ms)
-;;                           (lsp))))  ; or lsp-deferred
+(use-package lsp-mode
+    :ensure t
+    :init
+    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+    (setq lsp-keymap-prefix "C-c l")
+    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+           (web-mode . lsp)
+           ;; if you want which-key integration
+           (lsp-mode . lsp-enable-which-key-integration))
+    :commands lsp)
 
-;; (use-package lsp-mode
-;;   ;; Enable lsp-mode automatically for language files
-;;   :hook  (scala-mode . lsp)
-;;          (lsp-mode . lsp-lens-mode)
-;;          (python-mode . lsp)
-;;   :config (setq lsp-prefer-flymake nil))
+;; optionally
+(use-package lsp-ui :commands lsp-ui-mode)
+
+;; if you are helm user
+(use-package helm-lsp :commands helm-lsp-workspace-symbol)
+
+;; if you are ivy user
+(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+;; optionally if you want to use debugger
+(use-package dap-mode)
+;; (use-package dap-LANGUAGE) to load the dap adapter for your language
 
 ;; ;; Add metals backend for lsp-mode
 ;; (use-package lsp-metals
 ;;   :config (setq lsp-metals-treeview-show-when-views-received t))
 
-;; Enable nice rendering of documentation on hover
-(use-package lsp-ui)
 (use-package lsp-treemacs
     :after lsp-mode
     :bind (:map lsp-mode-map
