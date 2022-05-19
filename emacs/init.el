@@ -637,6 +637,9 @@
 
 (global-set-key (kbd "C-c C-v") 'send-to-vterm)
 
+(use-package typescript-mode
+    :mode "\\.ts\\'"
+    :hook (typescript-mode . lsp))
 
 ;;; My list of Toggles
 (defun toggle-line-numbers-mode ()
