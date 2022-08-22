@@ -328,10 +328,10 @@
          :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*")))
     :config
     (setq org-confirm-babel-evaluate nil)
-    (setq org-hide-emphasis-markers t)
-    :hook
-    (org-mode . visual-line-mode)
-    (org-mode . variable-pitch-mode))
+    (setq org-hide-emphasis-markers t))
+;; :hook
+;; (org-mode . visual-line-mode)
+;; (org-mode . variable-pitch-mode))
 
 (custom-theme-set-faces
  'user
@@ -356,6 +356,15 @@
 (use-package org-superstar
     :hook (org-mode . (lambda ()
                           (org-superstar-mode 1))))
+
+;; OSX: please install pngpaste from Homebrew
+(use-package org-download
+    :after org
+    :bind
+    (:map org-mode-map
+          (("s-Y" . org-download-screenshot)
+           ("s-y" . org-download-yank)
+           ("s-C" . org-download-clipboard))))
 
 (use-package org-download
     :config
