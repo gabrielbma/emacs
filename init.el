@@ -231,7 +231,7 @@
 (use-package yasnippet
     :demand t
     :config
-    (add-to-list 'yas-snippet-dirs (getenv "YASNIPPET_SNIPPETS_REPO"))
+    (add-to-list 'yas-snippet-dirs (concat (getenv "PROJECTS_DIR") "/" "yasnippets-snippets"))
     (yas-global-mode 1))
 
 (use-package yasnippet-snippets)
@@ -388,6 +388,31 @@
      `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5))))
      `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75))))
      `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
+
+(use-package org-roam
+    :after org
+    :custom
+    (org-roam-directory (concat (getenv "PROJECTS_DIR") "/" "knowledge-base"))
+    :config
+    (org-roam-setup)
+    :bind (("C-c n f" . org-roam-node-find)
+           ("C-c n r" . org-roam-node-random)		    
+           (:map org-mode-map
+                 (("C-c n i" . org-roam-node-insert)
+                  ("C-c n o" . org-id-get-create)
+                  ("C-c n t" . org-roam-tag-add)
+                  ("C-c n a" . org-roam-alias-add)
+                  ("C-c n l" . org-roam-buffer-toggle)))))
+
+(use-package deft
+    :after org
+    :bind
+    ("C-c n d" . deft)
+    :custom
+    (deft-recursive t)
+    (deft-use-filter-string-for-filename t)
+    (deft-default-extension "org")
+    (deft-directory org-roam-directory))
 
 (use-package duplicate-thing
     :bind ("M-c" . duplicate-thing))
