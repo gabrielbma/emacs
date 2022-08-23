@@ -434,6 +434,10 @@
 
 (use-package docker-compose-mode)
 
+(use-package docker
+    :ensure t
+    :bind ("C-c d" . docker))
+
 (use-package symbol-overlay
     :bind
     (("C-c h" . symbol-overlay-put)
