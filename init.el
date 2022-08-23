@@ -648,6 +648,8 @@
     :mode 
     ("\\.restclient\\'" . restclient-mode))
 
+(use-package jq-mode)
+
 (use-package rainbow-delimiters
     :hook (prog-mode . rainbow-delimiters-mode))
 
