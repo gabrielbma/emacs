@@ -234,7 +234,8 @@
     (add-to-list 'yas-snippet-dirs (concat (getenv "PROJECTS_DIR") "/" "yasnippets-snippets"))
     (yas-global-mode 1))
 
-(use-package yasnippet-snippets)
+(use-package yasnippet-snippets
+    :after yasnippet)
 
 (use-package ag)
 
