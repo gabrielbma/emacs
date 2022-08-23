@@ -328,7 +328,10 @@
          :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*")))
     :config
     (setq org-confirm-babel-evaluate nil)
-    (setq org-hide-emphasis-markers t))
+    (setq org-hide-emphasis-markers t)
+    (org-babel-do-load-languages 'org-babel-load-languages
+                                 (append org-babel-load-languages
+                                         '((shell     . t)))))
 ;; :hook
 ;; (org-mode . visual-line-mode)
 ;; (org-mode . variable-pitch-mode))
@@ -648,7 +651,19 @@
     :mode 
     ("\\.restclient\\'" . restclient-mode))
 
-(use-package jq-mode)
+(use-package ob-restclient
+    :demand t
+    :after org-mode
+    :config
+    (org-babel-do-load-languages 'org-babel-load-languages
+                                 (append org-babel-load-languages
+                                         '((restclient     . t)))))
+
+(use-package jq-mode
+    :config
+    (org-babel-do-load-languages 'org-babel-load-languages
+                                 (append org-babel-load-languages
+                                         '((jq . t)))))
 
 (use-package rainbow-delimiters
     :hook (prog-mode . rainbow-delimiters-mode))
