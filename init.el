@@ -575,7 +575,8 @@
      ("C-x C-f" . helm-find-files)
      ("C-x C-r" . helm-recentf)
      ("C-h a" . helm-apropos)
-     ("M-y" . helm-show-kill-ring)))
+     ("M-y" . helm-show-kill-ring)
+     ("C-x f" . helm-find)))
 
 (use-package helm-fd
     :straight
