@@ -632,7 +632,21 @@
     :config
     (setq helm-boring-buffer-regexp-list '("\\` " "\\`\\*Echo Area" "\\`\\*Minibuf")))
 
-(use-package helm-rg)
+(use-package helm-rg
+    :demand t
+    :config
+    (setq helm-rg-default-directory 'git-root)
+    :bind
+    ("C-x l" . helm-rg)) 
+
+(use-package typescript-mode
+    :mode "\\.ts\\'"
+    :hook (typescript-mode . lsp))
+
+(use-package restclient
+    :demand t
+    :mode 
+    ("\\.restclient\\'" . restclient-mode))
 
 (use-package rainbow-delimiters
     :hook (prog-mode . rainbow-delimiters-mode))

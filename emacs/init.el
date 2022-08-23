@@ -351,6 +351,8 @@
     :config
     (diredfl-global-mode))
 
+(use-package logview)
+
 (use-package peep-dired
     :after dired
     :demand t
@@ -477,7 +479,9 @@
      ("C-x C-f" . helm-find-files)
      ("C-x C-r" . helm-recentf)
      ("C-h a" . helm-apropos)
-     ("M-y" . helm-show-kill-ring)))
+     ("M-y" . helm-show-kill-ring))
+    :bind*
+    ("C-x f" . helm-find))
 
 (use-package helm-projectile
     :after projectile
@@ -524,7 +528,12 @@
 
 (use-package helm-ag)
 
-(use-package helm-rg)
+(use-package helm-rg
+    :demant t
+    :config
+    (setq helm-rg-default-directory 'git-root)
+    :bind
+    ("C-x l" . helm-rg))
 
 (use-package rainbow-delimiters
     :hook (prog-mode . rainbow-delimiters-mode))
@@ -638,6 +647,7 @@
 (global-set-key (kbd "C-c C-v") 'send-to-vterm)
 
 (use-package typescript-mode
+    :ensure t
     :mode "\\.ts\\'"
     :hook (typescript-mode . lsp))
 
@@ -678,6 +688,16 @@
     "Toggle 'rainbow-delimiters-mode'."
     (interactive)
     (rainbow-delimiters-mode (if (bound-and-true-p rainbow-delimiters-mode) -1 1)))
+
+(use-package docker
+    :ensure t
+    :bind ("C-c d" . docker))
+
+(se-package restclient
+            :ensure t
+            :demand t
+            :mode 
+            ("\\.restclient\\'" . restclient-mode))
 
 (global-set-key (kbd "<f12>") 
                 (progn
