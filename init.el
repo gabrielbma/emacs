@@ -705,18 +705,20 @@
     ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
     (setq sbt:program-options '("-Dsbt.supershell=false")))
 
-(use-package js2-mode 
+(use-package js2-mode
     :hook  (js2-mode . (lambda ()
-                           (setq js-indent-level . 2)
-                           (setq tag-width 2)))
+                           (progn (setq js-indent-level 2)
+                                  (setq standart-indent 2)
+                                  (setq tag-width 2))))
     :mode
     (("\\.js\\'" . js2-mode)
      ("\\.avsc\\'" . js2-mode)))
 
 (use-package json-mode
     :hook (json-mode . (lambda ()
-                           (setq js-indent-level . 2)
-                           (setq tag-width 2)))
+                           (progn (setq js-indent-level 2)
+                                  (setq standart-indent 2)
+                                  (setq tag-width 2))))
     :mode
     (("\\.template\\'" . json-mode)))
 
