@@ -526,6 +526,9 @@
     (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
     (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
+(use-package lsp-tailwindcss
+    :straight (:type git :host github :repo "merrickluo/lsp-tailwindcss"))
+
 (use-package vterm
     :bind (:map vterm-mode-map
                 ("M-P" . 'windmove-up)
