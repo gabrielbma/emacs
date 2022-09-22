@@ -329,6 +329,8 @@
          :build (:not autoloads)
          :files (:defaults "lisp/*.el" ("etc/styles/" "etc/styles/*")))
     :config
+    (setq org-image-actual-width nil)
+    (setq org-startup-with-inline-images t)
     (setq org-confirm-babel-evaluate nil)
     (setq org-hide-emphasis-markers t)
     (setq org-log-done 'time)
