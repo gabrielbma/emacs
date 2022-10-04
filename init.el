@@ -231,7 +231,7 @@
 (use-package yasnippet
     :demand t
     :config
-    (add-to-list 'yas-snippet-dirs (concat (getenv "PROJECTS_DIR") "/" "yasnippets-snippets"))
+    (add-to-list 'yas-snippet-dirs (concat (getenv "PROJECTS_DIR") "/" "yasnippet-snippets"))
     (yas-global-mode 1))
 
 (use-package yasnippet-snippets
