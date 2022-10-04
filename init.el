@@ -338,7 +338,8 @@
           '((sequence "TODO(t)" "IN-PROGRESS(p)" "PAUSED(u)" "|" "DONE(d)" "CANCELLED(c)")))    
     (org-babel-do-load-languages 'org-babel-load-languages
                                  (append org-babel-load-languages
-                                         '((shell     . t))))
+                                         '((shell     . t)
+                                           (js . t))))
     :hook
     (org-mode . visual-line-mode))
     ;; (org-mode . variable-pitch-mode))
