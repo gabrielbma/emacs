@@ -407,6 +407,7 @@
     :custom
     (org-roam-directory (concat (getenv "PROJECTS_DIR") "/" "knowledge-base"))
     :config
+    (setq org-return-follows-link t)
     (org-roam-setup)
     :bind (("C-c n f" . org-roam-node-find)
            ("C-c n r" . org-roam-node-random)		    
