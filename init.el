@@ -577,6 +577,7 @@
     (setq helm-M-x-fuzzy-match t)
     (setq helm-buffers-fuzzy-matching t
           helm-recentf-fuzzy-match    t)
+    (setq helm-buffer-max-length 60)
     :bind 
     (("M-x" . helm-M-x)
      ("C-x b" . helm-multi-files)
