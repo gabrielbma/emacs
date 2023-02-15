@@ -208,6 +208,13 @@
     (setq which-key-idle-delay 1)
     (which-key-setup-minibuffer))
 
+(use-package kubernetes
+    :ensure t
+    :commands (kubernetes-overview)
+    :config
+    (setq kubernetes-poll-frequency 3600
+          kubernetes-redraw-frequency 3600))
+
 (use-package nyan-mode
     :if window-system
     :demand t
