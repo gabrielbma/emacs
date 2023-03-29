@@ -341,6 +341,7 @@
     (setq org-confirm-babel-evaluate nil)
     (setq org-hide-emphasis-markers t)
     (setq org-log-done 'time)
+    (setq org-startup-with-inline-images t)
     (setq org-todo-keywords
           '((sequence "TODO(t)" "IN-PROGRESS(p)" "PAUSED(u)" "|" "DONE(d)" "CANCELLED(c)")))    
     (org-babel-do-load-languages 'org-babel-load-languages
