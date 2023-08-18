@@ -215,6 +215,12 @@
     (setq kubernetes-poll-frequency 3600
           kubernetes-redraw-frequency 3600))
 
+(use-package terraform-mode
+    :ensure t
+    :config
+    (custom-set-variables
+     '(terraform-indent-level 4)))
+
 (use-package nyan-mode
     :if window-system
     :demand t
