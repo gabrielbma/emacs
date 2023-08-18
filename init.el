@@ -267,7 +267,13 @@
     (setq project-switch-commands t))
 
 (use-package magit
-    :bind (("C-x g" . magit-status)))
+    :bind (("C-x g" . magit-status))
+    :config
+    (setq magit-diff-refine-hunk 'all
+          magit-diff-refine-ignore-whitespace nil
+          magit-diff-paint-whitespace t
+          magit-diff-paint-whitespace-lines 'all
+          magit-diff-highlight-trailing t))
 
 ;; manually disable that mode if not using Gerrit.
 (use-package magit-gerrit
