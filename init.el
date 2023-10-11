@@ -315,28 +315,10 @@
     :config
     (move-text-default-bindings))
 
-(use-package smartparens
-    :demand t
-    :bind (:map smartparens-mode-map
-                ("C-M-f" . sp-forward-sexp)
-                ("C-M-b" . sp-backward-sexp)
-                ("C-M-d" . sp-down-sexp)
-                ("C-M-a" . sp-backward-down-sexp)
-                ("C-S-d" . sp-beginning-of-sexp)
-                ("C-S-a" . sp-end-of-sexp)
-                ("C-M-e" . sp-up-sexp)
-                ("C-M-u" . sp-backward-up-sexp)
-                ("C-M-t" . sp-transpose-sexp)
-                ("C-M-n" . sp-forward-hybrid-sexp)
-                ("C-M-p" . sp-backward-hybrid-sexp)
-                ("C-M-k" . sp-kill-sexp)
-                ("C-M-w" . sp-copy-sexp)
-                ("C-M-<delete>" . sp-unwrap-sexp)
-                ("C-M-<backspace>" . sp-backward-unwrap-sexp))
-    :config
-    (require 'smartparens-config)
-    (smartparens-global-mode t))
-
+(use-package parinfer-rust-mode
+    :hook emacs-lisp-mode
+    :init
+    (setq parinfer-rust-auto-download t))
 
 (use-package org
     :straight
@@ -693,9 +675,6 @@
 
 (use-package rainbow-delimiters
     :hook (prog-mode . rainbow-delimiters-mode))
-
-(use-package aggressive-indent
-    :hook (emacs-lisp-mode . aggressive-indent-mode))
 
 (use-package  highlight-indent-guides
     :hook (prog-mode . highlight-indent-guides-mode)
